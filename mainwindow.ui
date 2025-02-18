@@ -93,7 +93,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QPlainTextEdit" name="plainTextEdit"/>
+     <widget class="QPlainTextEdit" name="textDocument">
+      <property name="plainText">
+       <string/>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPlainTextEdit" name="plainTextEdit_2"/>

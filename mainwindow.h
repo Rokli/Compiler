@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Controller/maincontroller.h"
+#include <QDebug>
+#include <Models/document.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,10 +18,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+private slots:
+    void createDocument();
+    void openDocument();
+    void saveDocument();
+    void saveAsDocument();
+    void exitDocument();
 private:
     Ui::MainWindow *ui;
-    MainController mainController;
+    Document *document_;
 
 };
 #endif // MAINWINDOW_H

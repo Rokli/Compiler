@@ -9,9 +9,6 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Controller/controller.cpp \
-    Controller/filecontroller.cpp \
-    Controller/maincontroller.cpp \
     Models/document.cpp \
     Models/editing.cpp \
     Models/programm.cpp \
@@ -19,9 +16,6 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    Controller/controller.h \
-    Controller/filecontroller.h \
-    Controller/maincontroller.h \
     Models/document.h \
     Models/editing.h \
     Models/programm.h \
