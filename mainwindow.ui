@@ -130,7 +130,7 @@
     </property>
     <addaction name="ovveride"/>
     <addaction name="replace"/>
-    <addaction name="cute"/>
+    <addaction name="cut"/>
     <addaction name="copy"/>
     <addaction name="insert"/>
     <addaction name="remove"/>
@@ -202,7 +202,7 @@
     <string>Повторить</string>
    </property>
   </action>
-  <action name="cute">
+  <action name="cut">
    <property name="text">
     <string>Вырезать</string>
    </property>

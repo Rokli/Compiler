@@ -24,6 +24,15 @@ private slots:
     void saveDocument();
     void saveAsDocument();
     void exitDocument();
+
+    void ovverideEditing();
+    void copyEditing();
+    void cutEditing();
+    void insertEditing();
+    void removeEditing();
+    void replaceEditing();
+    void selectAllEditing();
+
 private:
     Ui::MainWindow *ui;
     Document *document_;
