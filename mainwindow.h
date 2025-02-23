@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <Models/document.h>
-
+#include <referencewindow.h>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -32,6 +32,9 @@ private slots:
     void removeEditing();
     void replaceEditing();
     void selectAllEditing();
+
+    void callReference();
+    void aboutReference();
 
 private:
     Ui::MainWindow *ui;

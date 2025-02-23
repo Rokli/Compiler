@@ -13,16 +13,19 @@ SOURCES += \
     Models/editing.cpp \
     Models/programm.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    referencewindow.cpp
 
 HEADERS += \
     Models/document.h \
     Models/editing.h \
     Models/programm.h \
-    mainwindow.h
+    mainwindow.h \
+    referencewindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    referencewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

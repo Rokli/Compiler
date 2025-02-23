@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QWidget>
 #include <QTextStream>
+#include <QMessageBox>
 
 class Document
 {

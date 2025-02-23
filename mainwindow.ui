@@ -26,7 +26,7 @@
       <property name="orientation">
        <enum>Qt::Orientation::Horizontal</enum>
       </property>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="createDocumentButton">
        <property name="text">
         <string/>
        </property>
@@ -34,7 +34,7 @@
         <iconset theme="QIcon::ThemeIcon::DocumentNew"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="openDocumentButton">
        <property name="text">
         <string/>
        </property>
@@ -42,7 +42,7 @@
         <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="saveDocumentButton">
        <property name="text">
         <string/>
        </property>
@@ -50,7 +50,7 @@
         <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_7">
+      <widget class="QPushButton" name="ovverideButton">
        <property name="text">
         <string/>
        </property>
@@ -58,7 +58,7 @@
         <iconset theme="QIcon::ThemeIcon::EditUndo"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="replaceButton">
        <property name="text">
         <string/>
        </property>
@@ -66,7 +66,7 @@
         <iconset theme="QIcon::ThemeIcon::EditRedo"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="copyButton">
        <property name="text">
         <string/>
        </property>
@@ -74,7 +74,7 @@
         <iconset theme="QIcon::ThemeIcon::EditCopy"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="cutButton">
        <property name="text">
         <string/>
        </property>
@@ -82,7 +82,7 @@
         <iconset theme="QIcon::ThemeIcon::EditCut"/>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="insertButton">
        <property name="text">
         <string/>
        </property>
@@ -100,7 +100,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPlainTextEdit" name="plainTextEdit_2"/>
+     <widget class="QPlainTextEdit" name="console"/>
     </item>
    </layout>
   </widget>
@@ -158,8 +158,8 @@
     <property name="title">
      <string>Справка</string>
     </property>
-    <addaction name="action_20"/>
-    <addaction name="action_21"/>
+    <addaction name="callReference"/>
+    <addaction name="aboutReference"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEditor"/>
@@ -267,12 +267,12 @@
     <string>Исходный код программы</string>
    </property>
   </action>
-  <action name="action_20">
+  <action name="callReference">
    <property name="text">
     <string>Вызов справки</string>
    </property>
   </action>
-  <action name="action_21">
+  <action name="aboutReference">
    <property name="text">
     <string>О программе</string>
    </property>

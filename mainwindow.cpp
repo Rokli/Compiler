@@ -20,6 +20,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->replace,&QAction::triggered,this,&MainWindow::replaceEditing);
     connect(ui->select_all,&QAction::triggered,this,&MainWindow::selectAllEditing);
 
+    connect(ui->callReference,&QAction::triggered,this,&MainWindow::callReference);
+    connect(ui->aboutReference,&QAction::triggered,this,&MainWindow::aboutReference);
+
+    connect(ui->createDocumentButton,&QPushButton::clicked,this,&MainWindow::createDocument);
+    connect(ui->openDocumentButton,&QPushButton::clicked,this,&MainWindow::openDocument);
+    connect(ui->saveDocumentButton,&QPushButton::clicked,this,&MainWindow::saveDocument);
+    connect(ui->ovverideButton,&QPushButton::clicked,this,&MainWindow::ovverideEditing);
+    connect(ui->replaceButton,&QPushButton::clicked,this,&MainWindow::replaceEditing);
+    connect(ui->copyButton,&QPushButton::clicked,this,&MainWindow::copyEditing);
+    connect(ui->cutButton,&QPushButton::clicked,this,&MainWindow::cutEditing);
+    connect(ui->insertButton,&QPushButton::clicked,this,&MainWindow::insertEditing);
+
     document_ = new Document("new_document.txt");
 }
 
@@ -75,4 +87,13 @@ void MainWindow::replaceEditing(){
 
 void MainWindow::selectAllEditing(){
     ui->textDocument->selectAll();
+}
+
+void MainWindow::callReference(){
+    ReferenceWindow *helpwindow = new ReferenceWindow();
+    helpwindow->show();
+}
+
+void MainWindow::aboutReference(){
+
 }

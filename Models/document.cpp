@@ -5,11 +5,25 @@ Document::Document(QString name_file){
 }
 
 void Document::create(QPlainTextEdit* editor){
-    file_->open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream in(file_);
-    QString file_content = in.readAll();
-    editor->setPlainText(file_content);
-    file_->close();
+    QString filePath = QFileDialog::getSaveFileName(nullptr,
+                                                    "Сохранить файл",
+                                                    QDir::homePath(),
+                                                    "Текстовые файлы (*.txt);;Все файлы (*.*)");
+
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    this->file_ = new QFile(filePath);
+
+    if (!this->file_->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(nullptr, "Ошибка", "Не удалось создать файл");
+        return;
+    }
+
+    QTextStream out(this->file_);
+    out << editor->toPlainText();
+    this->file_->close();
 }
 
 void Document::open(QPlainTextEdit* editor){
