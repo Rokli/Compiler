@@ -17,7 +17,9 @@ void Document::create(QPlainTextEdit* editor){
     this->file_ = new QFile(filePath);
 
     if (!this->file_->open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(nullptr, "Ошибка", "Не удалось создать файл");
+        QMessageBox::warning(nullptr,
+                             "Ошибка",
+                             "Не удалось создать файл");
         return;
     }
 
@@ -27,7 +29,10 @@ void Document::create(QPlainTextEdit* editor){
 }
 
 void Document::open(QPlainTextEdit* editor){
-    QString name_file = QFileDialog::getOpenFileName(new QWidget, "Открыть файл", "", "Текстовые файлы (*.txt);;Все файлы (*)");
+    QString name_file = QFileDialog::getOpenFileName(new QWidget,
+                                                    "Открыть файл",
+                                                    "",
+                                                    "Текстовые файлы (*.txt);;Все файлы (*)");
 
     file_ = new QFile(name_file);
     file_->open(QIODevice::ReadOnly | QIODevice::Text);
@@ -50,7 +55,10 @@ void Document::save(QPlainTextEdit* editor){
 }
 
 void Document::saveAs(QPlainTextEdit* editor){
-    QString name_file = QFileDialog::getSaveFileName(new QWidget, "Сохранить файл", "", "Текстовые файлы (*.txt);;Все файлы (*)");
+    QString name_file = QFileDialog::getSaveFileName(new QWidget,
+                                                     "Сохранить файл",
+                                                     "",
+                                                     "Текстовые файлы (*.txt);;Все файлы (*)");
     file_ = new QFile(name_file);
 
     file_->open(QIODevice::WriteOnly | QIODevice::Text);

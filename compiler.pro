@@ -1,5 +1,4 @@
 QT       += core gui
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -13,19 +12,16 @@ SOURCES += \
     Models/editing.cpp \
     Models/programm.cpp \
     main.cpp \
-    mainwindow.cpp \
-    referencewindow.cpp
+    mainwindow.cpp
 
 HEADERS += \
     Models/document.h \
     Models/editing.h \
     Models/programm.h \
-    mainwindow.h \
-    referencewindow.h
+    mainwindow.h
 
 FORMS += \
-    mainwindow.ui \
-    referencewindow.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

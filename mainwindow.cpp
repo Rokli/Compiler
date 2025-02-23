@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    setWindowTitle("Компилятор");
     ui->setupUi(this);
     connect(ui->create, &QAction::triggered, this, &MainWindow::createDocument);
     connect(ui->open, &QAction::triggered, this, &MainWindow::openDocument);
@@ -90,10 +91,14 @@ void MainWindow::selectAllEditing(){
 }
 
 void MainWindow::callReference(){
-    ReferenceWindow *helpwindow = new ReferenceWindow();
-    helpwindow->show();
+    QString path = QCoreApplication::applicationDirPath() + "/documentation/documentation.html";
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::aboutReference(){
-
+    QMessageBox::information(this,
+                             "О программе",
+                             "Приложение создана студентом НГТУ Шаталов Максимом.\n"
+                             "Приложение создана для того, что бы запускать функции инициализации константы define() языка PHP.\n"
+                             "О установке и управлении приложения можно почитать в документации.");
 }

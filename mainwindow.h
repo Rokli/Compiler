@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <Models/document.h>
-#include <referencewindow.h>
+#include <QDesktopServices>
+#include <QUrl>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
