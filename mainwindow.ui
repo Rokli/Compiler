@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Компилятор</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -93,9 +93,9 @@
      </widget>
     </item>
     <item>
-     <widget class="QPlainTextEdit" name="textDocument">
-      <property name="plainText">
-       <string/>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>-1</number>
       </property>
      </widget>
     </item>
@@ -161,10 +161,18 @@
     <addaction name="callReference"/>
     <addaction name="aboutReference"/>
    </widget>
+   <widget class="QMenu" name="settings">
+    <property name="title">
+     <string>Настройка</string>
+    </property>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEditor"/>
    <addaction name="menuText"/>
    <addaction name="command"/>
+   <addaction name="settings"/>
    <addaction name="reference"/>
   </widget>
   <action name="create">
@@ -275,6 +283,16 @@
   <action name="aboutReference">
    <property name="text">
     <string>О программе</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Настроить шрифт</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Выбрать язык</string>
    </property>
   </action>
  </widget>

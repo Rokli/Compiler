@@ -6,6 +6,11 @@
 #include <Models/document.h>
 #include <QDesktopServices>
 #include <QUrl>
+#include<QTabWidget>
+#include <QToolBar>
+#include <QMimeData>
+#include <QUrl>
+#include "Models/codeeditor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,6 +43,20 @@ private slots:
     void callReference();
     void aboutReference();
 
+    void openSettings();
+
+    void closeTab(int index);
+    int addNewTab();
+    void closeCurrentTab();
+
+    void updateCursorPosition();
+
+    CodeEditor* getCurrentIdTextEdit();
+
+protected:
+    void wheelEvent(QWheelEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 private:
     Ui::MainWindow *ui;
     Document *document_;

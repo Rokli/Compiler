@@ -45,6 +45,18 @@ void Document::open(QPlainTextEdit* editor){
     name_file_ = name_file;
 }
 
+void Document::open(QString filePath,QPlainTextEdit* editor){
+    file_ = new QFile(filePath);
+    file_->open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream in(file_);
+    QString file_content = in.readAll();
+    editor->setPlainText(file_content);
+
+    file_->close();
+    name_file_ = filePath;
+}
+
 void Document::save(QPlainTextEdit* editor){
     file_->open(QIODevice::WriteOnly | QIODevice::Text);
 

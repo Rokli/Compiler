@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QTextStream>
 #include <QMessageBox>
+#include "Models/codeeditor.h"
 
 class Document
 {
@@ -13,6 +14,7 @@ public:
     Document(QString name_file  = "new_document.txt");
     void create(QPlainTextEdit* editor);
     void open(QPlainTextEdit* editor);
+    void open(QString filePath,QPlainTextEdit* editor);
     void save(QPlainTextEdit* editor);
     void saveAs(QPlainTextEdit *editor);
     void exit(QPlainTextEdit* editor);
