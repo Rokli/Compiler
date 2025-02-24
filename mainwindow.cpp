@@ -50,7 +50,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     toolBar->addAction(newTabAction);
     toolBar->addAction(closeTabAction);
-    addNewTab();
 
 }
 
@@ -60,52 +59,60 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::createDocument(){
-    document_->create(getCurrentIdTextEdit());
+    addNewTab();
+    document_->create(getTextEdit(current_id_));
+    updateTabName(current_id_);
 }
 
 void MainWindow::openDocument(){
-    // document_->open(ui->textDocument);
+    addNewTab();
+    document_->open(getTextEdit(current_id_));
+    updateTabName(current_id_);
 }
 
 void MainWindow::saveDocument(){
-    // document_->save(ui->textDocument);
+    addNewTab();
+    document_->save(getTextEdit(current_id_));
+    updateTabName(current_id_);
 }
 
 void MainWindow::saveAsDocument(){
-    // document_->saveAs(ui->textDocument);
+    addNewTab();
+    document_->saveAs(getTextEdit(current_id_));
+    updateTabName(current_id_);
 }
 
 void MainWindow::exitDocument(){
-    // document_->exit(ui->textDocument);
+    document_->exit(getTextEdit(current_id_));
     QApplication::quit();
 }
 
 void MainWindow::ovverideEditing(){
-    // ui->textDocument->undo();
+    getCurrentIdTextEdit()->undo();
 }
 
 void MainWindow::copyEditing(){
-    //ui->textDocument->copy();
+    getCurrentIdTextEdit()->copy();
 }
 
 void MainWindow::cutEditing(){
-    // ui->textDocument->cut();
+    getCurrentIdTextEdit()->cut();
 }
 
 void MainWindow::insertEditing(){
-     //ui->textDocument->paste();
+    getCurrentIdTextEdit()->paste();
 }
 
 void MainWindow::removeEditing(){
-    // ui->textDocument->textCursor().removeSelectedText();
+    getCurrentIdTextEdit()->textCursor().removeSelectedText();
 }
 
 void MainWindow::replaceEditing(){
-    // ui->textDocument->redo();
+    getCurrentIdTextEdit()->redo();
 }
 
 void MainWindow::selectAllEditing(){
-    // ui->textDocument->selectAll();
+    getCurrentIdTextEdit()->selectAll();
 }
 
 void MainWindow::callReference(){
@@ -126,18 +133,19 @@ void MainWindow::openSettings(){
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event){
-    // if(event->modifiers() & Qt::ControlModifier){
-    //     int delta = event->angleDelta().y();
-    //     QFont fontTextDocument = ui->textDocument->font();
+    CodeEditor* editor = getCurrentIdTextEdit();
+    if(event->modifiers() & Qt::ControlModifier){
+        int delta = event->angleDelta().y();
+        QFont fontTextDocument = editor->font();
 
-    //     int newSize = fontTextDocument.pointSize() + (delta > 0 ? 1 : -1);
-    //     if (newSize >= 8 && newSize <= 32) {
-    //         fontTextDocument.setPointSize(newSize);
-    //         ui->textDocument->setFont(fontTextDocument);
-    //         ui->console->setFont(fontTextDocument);
-    //     }
-    //     event->accept();
-    // }
+        int newSize = fontTextDocument.pointSize() + (delta > 0 ? 1 : -1);
+        if (newSize >= 8 && newSize <= 32) {
+            fontTextDocument.setPointSize(newSize);
+            editor->setFont(fontTextDocument);
+            ui->console->setFont(fontTextDocument);
+        }
+        event->accept();
+    }
 }
 
 void MainWindow::closeTab(int index){
@@ -150,11 +158,10 @@ void MainWindow::closeTab(int index){
     }
 }
 
-int MainWindow::addNewTab(){
+void MainWindow::addNewTab(){
     CodeEditor *textEdit = new CodeEditor(this);
-    int index = ui->tabWidget->addTab(textEdit, "Новая вкладка");
-    ui->tabWidget->setCurrentIndex(index);
-    return index;
+    current_id_ = ui->tabWidget->addTab(textEdit,"Новый документ");
+    ui->tabWidget->setCurrentIndex(current_id_);
 }
 
 void MainWindow::closeCurrentTab(){
@@ -171,10 +178,8 @@ void MainWindow::dropEvent(QDropEvent *event){
     QList<QUrl> urls = event->mimeData()->urls();
     if (urls.isEmpty()) return;
 
-    int index = addNewTab();
-
     QString filePath = urls.first().toLocalFile();
-    CodeEditor *editor = qobject_cast<CodeEditor*>(ui->tabWidget->widget(index));
+    CodeEditor *editor = qobject_cast<CodeEditor*>(ui->tabWidget->widget(current_id_));
 
     document_->open(filePath,editor);
 }
@@ -183,7 +188,17 @@ CodeEditor* MainWindow::getCurrentIdTextEdit(){
     return qobject_cast<CodeEditor*>(ui->tabWidget->widget(ui->tabWidget->currentIndex()));
 }
 
+CodeEditor* MainWindow::getTextEdit(int id){
+    return qobject_cast<CodeEditor*>(ui->tabWidget->widget(id));
+}
 void MainWindow::updateCursorPosition(){
 
+}
+
+void MainWindow::updateTabName(int index){
+    QString fileName = document_->getFileName();
+    if (!fileName.isEmpty()) {
+        ui->tabWidget->setTabText(index, fileName);
+    }
 }
 

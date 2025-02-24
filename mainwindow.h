@@ -46,12 +46,14 @@ private slots:
     void openSettings();
 
     void closeTab(int index);
-    int addNewTab();
+    void addNewTab();
     void closeCurrentTab();
 
     void updateCursorPosition();
+    void updateTabName(int index);
 
     CodeEditor* getCurrentIdTextEdit();
+    CodeEditor* getTextEdit(int id);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
@@ -59,6 +61,7 @@ protected:
     void dropEvent(QDropEvent *event) override;
 private:
     Ui::MainWindow *ui;
+    int current_id_;
     Document *document_;
 
 };

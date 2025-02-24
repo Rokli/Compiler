@@ -5,16 +5,16 @@ Document::Document(QString name_file){
 }
 
 void Document::create(QPlainTextEdit* editor){
-    QString filePath = QFileDialog::getSaveFileName(nullptr,
+    name_file_ = QFileDialog::getSaveFileName(nullptr,
                                                     "Сохранить файл",
                                                     QDir::homePath(),
                                                     "Текстовые файлы (*.txt);;Все файлы (*.*)");
 
-    if (filePath.isEmpty()) {
+    if (name_file_.isEmpty()) {
         return;
     }
 
-    this->file_ = new QFile(filePath);
+    this->file_ = new QFile(name_file_);
 
     if (!this->file_->open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(nullptr,
@@ -29,12 +29,12 @@ void Document::create(QPlainTextEdit* editor){
 }
 
 void Document::open(QPlainTextEdit* editor){
-    QString name_file = QFileDialog::getOpenFileName(new QWidget,
+    name_file_ = QFileDialog::getOpenFileName(new QWidget,
                                                     "Открыть файл",
                                                     "",
                                                     "Текстовые файлы (*.txt);;Все файлы (*)");
 
-    file_ = new QFile(name_file);
+    file_ = new QFile(name_file_);
     file_->open(QIODevice::ReadOnly | QIODevice::Text);
 
     QTextStream in(file_);
@@ -42,10 +42,10 @@ void Document::open(QPlainTextEdit* editor){
     editor->setPlainText(file_content);
 
     file_->close();
-    name_file_ = name_file;
 }
 
-void Document::open(QString filePath,QPlainTextEdit* editor){
+void Document::open(QString filePath,QPlainTextEdit* editor){\
+    name_file_ = filePath;
     file_ = new QFile(filePath);
     file_->open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -54,7 +54,6 @@ void Document::open(QString filePath,QPlainTextEdit* editor){
     editor->setPlainText(file_content);
 
     file_->close();
-    name_file_ = filePath;
 }
 
 void Document::save(QPlainTextEdit* editor){
@@ -67,11 +66,11 @@ void Document::save(QPlainTextEdit* editor){
 }
 
 void Document::saveAs(QPlainTextEdit* editor){
-    QString name_file = QFileDialog::getSaveFileName(new QWidget,
+    name_file_ = QFileDialog::getSaveFileName(new QWidget,
                                                      "Сохранить файл",
                                                      "",
                                                      "Текстовые файлы (*.txt);;Все файлы (*)");
-    file_ = new QFile(name_file);
+    file_ = new QFile(name_file_);
 
     file_->open(QIODevice::WriteOnly | QIODevice::Text);
 
@@ -86,4 +85,8 @@ void Document::exit(QPlainTextEdit* editor){
         file_->close();
     }
     editor->clear();
+}
+
+QString Document::getFileName(){
+    return name_file_;
 }

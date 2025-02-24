@@ -18,6 +18,7 @@ public:
     void save(QPlainTextEdit* editor);
     void saveAs(QPlainTextEdit *editor);
     void exit(QPlainTextEdit* editor);
+    QString getFileName();
 private:
     QString name_file_;
     QFile *file_;
