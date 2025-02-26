@@ -13,6 +13,7 @@ SOURCES += \
     Models/codeeditor.cpp \
     Models/document.cpp \
     Models/editing.cpp \
+    Models/lexerphp.cpp \
     Models/linenumberarea.cpp \
     Models/programm.cpp \
     main.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     Models/codeeditor.h \
     Models/document.h \
     Models/editing.h \
+    Models/lexerphp.h \
     Models/linenumberarea.h \
     Models/programm.h \
     mainwindow.h \
@@ -36,3 +38,7 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+TRANSLATIONS += \
+    translate/compiler_en_GB.ts \
+    translate/compiler_ru_RU.ts

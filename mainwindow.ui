@@ -166,7 +166,7 @@
      <string>Настройка</string>
     </property>
     <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="changeLang"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEditor"/>
@@ -290,7 +290,7 @@
     <string>Настроить шрифт</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="changeLang">
    <property name="text">
     <string>Выбрать язык</string>
    </property>

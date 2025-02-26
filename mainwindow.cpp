@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     setAcceptDrops(true);
     ui->setupUi(this);
     document_ = new Document("new_document.txt");
+    lexer_ = new LexerPhp(this);
 
     connect(ui->create, &QAction::triggered, this, &MainWindow::createDocument);
     connect(ui->open, &QAction::triggered, this, &MainWindow::openDocument);
@@ -35,22 +36,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->cutButton,&QPushButton::clicked,this,&MainWindow::cutEditing);
     connect(ui->insertButton,&QPushButton::clicked,this,&MainWindow::insertEditing);
 
+    connect(ui->changeLang,&QAction::triggered,this,&MainWindow::changeLanguage);
+
     QTabWidget *tabWidget = ui->tabWidget;
 
     ui->tabWidget->setTabsClosable(true);
     ui->tabWidget->setMovable(true);
     connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
-
-    QToolBar *toolBar = addToolBar("Файл");
-    QAction *newTabAction = new QAction("Новая вкладка", this);
-    QAction *closeTabAction = new QAction("Закрыть вкладку", this);
-
-    connect(newTabAction, &QAction::triggered, this, &MainWindow::addNewTab);
-    connect(closeTabAction, &QAction::triggered, this, &MainWindow::closeCurrentTab);
-
-    toolBar->addAction(newTabAction);
-    toolBar->addAction(closeTabAction);
-
+    current_id_ = 0;
 }
 
 MainWindow::~MainWindow()
@@ -71,9 +64,8 @@ void MainWindow::openDocument(){
 }
 
 void MainWindow::saveDocument(){
-    addNewTab();
     document_->save(getTextEdit(current_id_));
-    updateTabName(current_id_);
+    closeTab(current_id_);
 }
 
 void MainWindow::saveAsDocument(){
@@ -149,17 +141,15 @@ void MainWindow::wheelEvent(QWheelEvent *event){
 }
 
 void MainWindow::closeTab(int index){
-    if (ui->tabWidget->count() > 1) {
-        QWidget *widget = ui->tabWidget->widget(index);
-        ui->tabWidget->removeTab(index);
-        delete widget;
-    } else {
-        QMessageBox::warning(this, "Предупреждение", "Нельзя закрыть последнюю вкладку!");
-    }
+    QWidget *widget = ui->tabWidget->widget(index);
+    ui->tabWidget->removeTab(index);
+    delete widget;
 }
 
 void MainWindow::addNewTab(){
     CodeEditor *textEdit = new CodeEditor(this);
+    lexer_->setDocument(textEdit->document());
+    connect(textEdit, &QPlainTextEdit::textChanged, this, &MainWindow::onTextChanged);
     current_id_ = ui->tabWidget->addTab(textEdit,"Новый документ");
     ui->tabWidget->setCurrentIndex(current_id_);
 }
@@ -202,3 +192,36 @@ void MainWindow::updateTabName(int index){
     }
 }
 
+void MainWindow::closeEvent(QCloseEvent *event){
+    if (isModified) {
+        QMessageBox::StandardButton resBtn = QMessageBox::question(this, "Программа",
+                                                                   "Сохранить изменения?", QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                                                                   QMessageBox::Save);
+        if (resBtn == QMessageBox::Save) {
+            saveDocument();
+            event->accept();
+        } else if (resBtn == QMessageBox::Discard) {
+            event->accept();
+        } else {
+            event->ignore();
+        }
+    } else {
+        event->accept();
+    }
+}
+
+void MainWindow::onTextChanged(){
+    isModified = true;
+}
+
+void MainWindow::changeLanguage(){
+    QString language = (QLocale::system().name() == "en_US") ? "ru_RU" : "en_US";
+
+    QTranslator translator;
+    if (translator.load(QLocale(language), ":/translate")) {
+        qApp->installTranslator(&translator);
+    }
+
+    ui->create->setText(tr("Создать"));
+    ui->open->setText(tr("Открыть"));
+}

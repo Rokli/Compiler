@@ -9,7 +9,7 @@ void Document::create(QPlainTextEdit* editor){
                                                     "Сохранить файл",
                                                     QDir::homePath(),
                                                     "Текстовые файлы (*.txt);;Все файлы (*.*)");
-
+    fileInfo = new QFileInfo(name_file_);
     if (name_file_.isEmpty()) {
         return;
     }
@@ -33,7 +33,7 @@ void Document::open(QPlainTextEdit* editor){
                                                     "Открыть файл",
                                                     "",
                                                     "Текстовые файлы (*.txt);;Все файлы (*)");
-
+    fileInfo = new QFileInfo(name_file_);
     file_ = new QFile(name_file_);
     file_->open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -46,6 +46,7 @@ void Document::open(QPlainTextEdit* editor){
 
 void Document::open(QString filePath,QPlainTextEdit* editor){\
     name_file_ = filePath;
+    fileInfo = new QFileInfo(name_file_);
     file_ = new QFile(filePath);
     file_->open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -70,6 +71,7 @@ void Document::saveAs(QPlainTextEdit* editor){
                                                      "Сохранить файл",
                                                      "",
                                                      "Текстовые файлы (*.txt);;Все файлы (*)");
+    fileInfo = new QFileInfo(name_file_);
     file_ = new QFile(name_file_);
 
     file_->open(QIODevice::WriteOnly | QIODevice::Text);
@@ -88,5 +90,5 @@ void Document::exit(QPlainTextEdit* editor){
 }
 
 QString Document::getFileName(){
-    return name_file_;
+    return fileInfo->baseName();
 }

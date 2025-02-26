@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include "Models/codeeditor.h"
+#include <QFileInfo>
 
 class Document
 {
@@ -21,6 +22,7 @@ public:
     QString getFileName();
 private:
     QString name_file_;
+    QFileInfo *fileInfo;
     QFile *file_;
 };
 

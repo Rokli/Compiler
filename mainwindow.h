@@ -10,7 +10,11 @@
 #include <QToolBar>
 #include <QMimeData>
 #include <QUrl>
+#include <QLocale>
+#include <QTranslator>
+#include <QCloseEvent>
 #include "Models/codeeditor.h"
+#include "Models/lexerphp.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -55,14 +59,18 @@ private slots:
     CodeEditor* getCurrentIdTextEdit();
     CodeEditor* getTextEdit(int id);
 
+    void changeLanguage();
+    void onTextChanged();
 protected:
     void wheelEvent(QWheelEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 private:
     Ui::MainWindow *ui;
     int current_id_;
     Document *document_;
-
+    LexerPhp *lexer_;
+    bool isModified;
 };
 #endif // MAINWINDOW_H
