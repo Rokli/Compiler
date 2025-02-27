@@ -16,6 +16,7 @@ SOURCES += \
     Models/lexerphp.cpp \
     Models/linenumberarea.cpp \
     Models/programm.cpp \
+    Models/styletheme.cpp \
     main.cpp \
     mainwindow.cpp \
     settings.cpp
@@ -27,6 +28,7 @@ HEADERS += \
     Models/lexerphp.h \
     Models/linenumberarea.h \
     Models/programm.h \
+    Models/styletheme.h \
     mainwindow.h \
     settings.h
 

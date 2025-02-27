@@ -8,7 +8,15 @@ MainWindow::MainWindow(QWidget *parent)
     setAcceptDrops(true);
     ui->setupUi(this);
     document_ = new Document("new_document.txt");
+    theme_ = new StyleTheme();
     lexer_ = new LexerPhp(this);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    QTabWidget *tabWidget = ui->tabWidget;
+
+    ui->tabWidget->setTabsClosable(true);
+    ui->tabWidget->setMovable(true);
+    connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
+    current_id_ = 0;
 
     connect(ui->create, &QAction::triggered, this, &MainWindow::createDocument);
     connect(ui->open, &QAction::triggered, this, &MainWindow::openDocument);
@@ -37,13 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->insertButton,&QPushButton::clicked,this,&MainWindow::insertEditing);
 
     connect(ui->changeLang,&QAction::triggered,this,&MainWindow::changeLanguage);
-
-    QTabWidget *tabWidget = ui->tabWidget;
-
-    ui->tabWidget->setTabsClosable(true);
-    ui->tabWidget->setMovable(true);
-    connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
-    current_id_ = 0;
+    connect(ui->changeTheme,&QAction::triggered,this,&MainWindow::changeTheme);
+    connect(ui->customizeFont,&QAction::triggered,this,&MainWindow::customizeFont);
 }
 
 MainWindow::~MainWindow()
@@ -64,11 +67,13 @@ void MainWindow::openDocument(){
 }
 
 void MainWindow::saveDocument(){
+    if(!checkWork()) return;
     document_->save(getTextEdit(current_id_));
     closeTab(current_id_);
 }
 
 void MainWindow::saveAsDocument(){
+    if(!checkWork()) return;
     addNewTab();
     document_->saveAs(getTextEdit(current_id_));
     updateTabName(current_id_);
@@ -80,30 +85,37 @@ void MainWindow::exitDocument(){
 }
 
 void MainWindow::ovverideEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->undo();
 }
 
 void MainWindow::copyEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->copy();
 }
 
 void MainWindow::cutEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->cut();
 }
 
 void MainWindow::insertEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->paste();
 }
 
 void MainWindow::removeEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->textCursor().removeSelectedText();
 }
 
 void MainWindow::replaceEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->redo();
 }
 
 void MainWindow::selectAllEditing(){
+    if(!checkWork()) return;
     getCurrentIdTextEdit()->selectAll();
 }
 
@@ -134,7 +146,6 @@ void MainWindow::wheelEvent(QWheelEvent *event){
         if (newSize >= 8 && newSize <= 32) {
             fontTextDocument.setPointSize(newSize);
             editor->setFont(fontTextDocument);
-            ui->console->setFont(fontTextDocument);
         }
         event->accept();
     }
@@ -193,7 +204,7 @@ void MainWindow::updateTabName(int index){
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
-    if (isModified) {
+    if (isModified_) {
         QMessageBox::StandardButton resBtn = QMessageBox::question(this, "Программа",
                                                                    "Сохранить изменения?", QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                                                                    QMessageBox::Save);
@@ -211,7 +222,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
 }
 
 void MainWindow::onTextChanged(){
-    isModified = true;
+    isModified_ = true;
 }
 
 void MainWindow::changeLanguage(){
@@ -290,5 +301,27 @@ void MainWindow::changeLanguage(){
         ui->aboutReference->setText("About programm");
 
         ui->command->setTitle("Command");
+    }
+}
+
+void MainWindow::customizeFont(){
+    QMessageBox::information(this,
+                             "Изменения шрифта",
+                             "ctrl+MouseWheel");
+}
+
+bool MainWindow::checkWork(){
+    if(!current_id_) return true;
+    else return false;
+}
+
+void MainWindow::changeTheme(){
+    if(!theme_->theme_){
+        setStyleSheet(theme_->ligthTheme_);
+        theme_->theme_ = true;
+    }
+    else{
+        setStyleSheet(theme_->darkTheme_);
+        theme_->theme_ = false;
     }
 }

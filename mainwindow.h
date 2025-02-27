@@ -15,6 +15,7 @@
 #include <QCloseEvent>
 #include "Models/codeeditor.h"
 #include "Models/lexerphp.h"
+#include "Models/styletheme.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -60,7 +61,11 @@ private slots:
     CodeEditor* getTextEdit(int id);
 
     void changeLanguage();
+    void changeTheme();
     void onTextChanged();
+
+    void customizeFont();
+    bool checkWork();
 protected:
     void wheelEvent(QWheelEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
@@ -71,7 +76,8 @@ private:
     int current_id_;
     Document *document_;
     LexerPhp *lexer_;
-    bool isModified;
+    StyleTheme *theme_;
+    bool isModified_;
     bool language_ = true;
 };
 #endif // MAINWINDOW_H

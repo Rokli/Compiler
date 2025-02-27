@@ -13,6 +13,173 @@
   <property name="windowTitle">
    <string>Компилятор</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background-color: #555;
+}
+
+QPushButton:pressed {
+    background-color: #777;
+}
+
+QTabWidget {
+    background-color: #2E2E2E;  /* Более мягкий тёмно-серый */
+    color: #D8D8D8;  /* Светлый текст */
+    border: 2px solid #555555;
+    border-radius: 8px;
+}
+
+QTabWidget::pane {
+    border: none;
+    background-color: #2E2E2E;
+}
+
+QTabBar::tab {
+    background-color: #3C3C3C;  /* Немного светлее */
+    color: #D8D8D8;  /* Светлый текст */
+    padding: 10px;
+    border-radius: 5px;
+    min-width: 100px;
+}
+
+QTabBar::tab:selected {
+    background-color: #5C6BC0;  /* Легкий синий оттенок для выделенного таба */
+    color: white;
+    border-radius: 5px;
+}
+
+QTabBar::tab:hover {
+    background-color: #4C4C4C;  /* Немного светлее на ховер */
+    color: white;
+}
+
+QTabBar::tab:pressed {
+    background-color: #6A7F93;  /* Более холодный оттенок при нажатии */
+    color: white;
+}
+
+
+QTableWidget {
+    background-color: #333333; /* Темный фон для всего table */
+    color: #D8D8D8; /* Светлый текст */
+    border: 1px solid #555555;
+}
+
+QHeaderView::section {
+    background-color: #444444; /* Темный фон для заголовков столбцов */
+    color: #D8D8D8; /* Светлый текст в заголовках */
+    padding: 5px;
+    border: 1px solid #555555; /* Рамка для заголовков */
+}
+
+QTableWidget::item {
+    background-color: #333333; /* Темный фон для ячеек */
+    color: #D8D8D8; /* Светлый текст в ячейках */
+    border: 1px solid #555555; /* Рамка для ячеек */
+}
+
+QTableWidget::item:selected {
+    background-color: #5C6BC0; /* Синий фон для выделенных ячеек */
+    color: white;
+}
+
+QTableWidget::horizontalHeader {
+    background-color: #444444; /* Убираем белый фон у горизонтальных заголовков */
+}
+
+QTableWidget::verticalHeader {
+    background-color: #444444; /* Убираем белый фон у вертикальных заголовков */
+}
+
+QHeaderView::section {
+    background-color: #444444; /* Темный фон для заголовков */
+    color: #D8D8D8; /* Светлый текст заголовков */
+    padding: 8px;
+    border: 1px solid #555555;
+    border-radius: 5px;
+}
+
+QTableCornerButton::section {
+    background-color: #444444;
+    border: none;
+}
+
+
+
+QMainWindow {
+    background-color: #2E2E2E; /* Темный фон окна */
+    color: #D8D8D8; /* Светлый текст */
+    border: 1px solid #555555;
+    border-radius: 8px;
+}
+
+QMenuBar {
+    background-color: #333333; /* Темный фон для меню */
+    color: #D8D8D8; /* Светлый текст в меню */
+    border-bottom: 1px solid #555555;
+}
+
+QMenuBar::item {
+    background-color: #333333;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+QMenuBar::item:selected {
+    background-color: #5C6BC0; /* Выделение пунктов меню */
+    color: white;
+}
+
+
+QLineEdit {
+    background-color: #3C3C3C; /* Темный фон для полей ввода */
+    color: #D8D8D8; /* Светлый текст */
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+
+QMessageBox {
+    background-color: #333333; /* Темный фон для всего окна */
+    color: #D8D8D8; /* Светлый текст */
+    border-radius: 10px; /* Округлые углы */
+    font-family: Arial, sans-serif; /* Шрифт */
+    font-size: 14px; /* Размер шрифта */
+}
+
+QMessageBox QPushButton {
+    background-color: #444444; /* Темный фон для кнопок */
+    color: #D8D8D8; /* Светлый текст на кнопках */
+    border: 1px solid #555555; /* Рамка кнопок */
+    border-radius: 5px; /* Округлые углы для кнопок */
+    padding: 5px 10px; /* Отступы в кнопках */
+}
+
+QMessageBox QPushButton:hover {
+    background-color: #5C6BC0; /* Цвет кнопки при наведении */
+    color: white;
+}
+
+QMessageBox QPushButton:pressed {
+    background-color: #3F51B5; /* Цвет кнопки при нажатии */
+    color: white;
+}
+
+QMessageBox QLabel {
+    color: #D8D8D8; /* Светлый текст в сообщении */
+}
+
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -23,10 +190,16 @@
         <height>30</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string/>
+      </property>
       <property name="orientation">
        <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <widget class="QPushButton" name="createDocumentButton">
+       <property name="styleSheet">
+        <string/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -35,6 +208,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="openDocumentButton">
+       <property name="styleSheet">
+        <string/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -43,6 +219,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="saveDocumentButton">
+       <property name="styleSheet">
+        <string/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -51,6 +230,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="ovverideButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -59,6 +241,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="replaceButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -67,6 +252,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="copyButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -75,6 +263,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="cutButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -83,6 +274,9 @@
        </property>
       </widget>
       <widget class="QPushButton" name="insertButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -94,13 +288,35 @@
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string/>
+      </property>
       <property name="currentIndex">
        <number>-1</number>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPlainTextEdit" name="console"/>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="styleSheet">
+       <string/>
+      </property>
+      <column>
+       <property name="text">
+        <string>Путь к файлу</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Линия</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Сообщение</string>
+       </property>
+      </column>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -111,7 +327,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>38</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -167,6 +383,7 @@
     </property>
     <addaction name="customizeFont"/>
     <addaction name="changeLang"/>
+    <addaction name="changeTheme"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEditor"/>
@@ -293,6 +510,11 @@
   <action name="changeLang">
    <property name="text">
     <string>Выбрать язык</string>
+   </property>
+  </action>
+  <action name="changeTheme">
+   <property name="text">
+    <string>Смена темы</string>
    </property>
   </action>
  </widget>
