@@ -72,5 +72,6 @@ private:
     Document *document_;
     LexerPhp *lexer_;
     bool isModified;
+    bool language_ = true;
 };
 #endif // MAINWINDOW_H

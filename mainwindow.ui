@@ -140,14 +140,14 @@
     <property name="title">
      <string>Текст</string>
     </property>
-    <addaction name="action_12"/>
-    <addaction name="action_13"/>
-    <addaction name="action_14"/>
-    <addaction name="action_15"/>
-    <addaction name="action_16"/>
-    <addaction name="action_17"/>
-    <addaction name="action_18"/>
-    <addaction name="action_19"/>
+    <addaction name="statmentProblem"/>
+    <addaction name="grammar"/>
+    <addaction name="classificationGrammar"/>
+    <addaction name="analysisMethod"/>
+    <addaction name="diagnosticsAnalysisError"/>
+    <addaction name="testCase"/>
+    <addaction name="references"/>
+    <addaction name="sourceCodeProgramm"/>
    </widget>
    <widget class="QMenu" name="command">
     <property name="title">
@@ -165,7 +165,7 @@
     <property name="title">
      <string>Настройка</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="customizeFont"/>
     <addaction name="changeLang"/>
    </widget>
    <addaction name="menuFile"/>
@@ -235,42 +235,42 @@
     <string>Выделить все</string>
    </property>
   </action>
-  <action name="action_12">
+  <action name="statmentProblem">
    <property name="text">
     <string>Постановка задачи</string>
    </property>
   </action>
-  <action name="action_13">
+  <action name="grammar">
    <property name="text">
     <string>Грамматика</string>
    </property>
   </action>
-  <action name="action_14">
+  <action name="classificationGrammar">
    <property name="text">
     <string>Классификация грамматики</string>
    </property>
   </action>
-  <action name="action_15">
+  <action name="analysisMethod">
    <property name="text">
     <string>Метод анализа</string>
    </property>
   </action>
-  <action name="action_16">
+  <action name="diagnosticsAnalysisError">
    <property name="text">
     <string>Диагностика и нейтрализация ошибок</string>
    </property>
   </action>
-  <action name="action_17">
+  <action name="testCase">
    <property name="text">
     <string>Тестовый пример</string>
    </property>
   </action>
-  <action name="action_18">
+  <action name="references">
    <property name="text">
     <string>Список литературы</string>
    </property>
   </action>
-  <action name="action_19">
+  <action name="sourceCodeProgramm">
    <property name="text">
     <string>Исходный код программы</string>
    </property>
@@ -285,7 +285,7 @@
     <string>О программе</string>
    </property>
   </action>
-  <action name="action">
+  <action name="customizeFont">
    <property name="text">
     <string>Настроить шрифт</string>
    </property>

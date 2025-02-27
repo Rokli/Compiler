@@ -215,13 +215,80 @@ void MainWindow::onTextChanged(){
 }
 
 void MainWindow::changeLanguage(){
-    QString language = (QLocale::system().name() == "en_US") ? "ru_RU" : "en_US";
+    language_ = language_ ? false : true;
 
-    QTranslator translator;
-    if (translator.load(QLocale(language), ":/translate")) {
-        qApp->installTranslator(&translator);
+    if(language_){
+        ui->menuFile->setTitle("Файл");
+        ui->create->setText("Создать");
+        ui->open->setText("Открыть");
+        ui->save->setText("Сохранить");
+        ui->saveAs->setText("Сохранить как");
+        ui->exit->setText("Выход");
+
+        ui->menuFile->setTitle("Правка");
+        ui->ovveride->setText("Отменить");
+        ui->replace->setText("Повторить");
+        ui->cut->setText("Вырезать");
+        ui->copy->setText("Копировать");
+        ui->insert->setText("Вставить");
+        ui->remove->setText("Удалить");
+        ui->select_all->setText("Выделить все");
+
+        ui->menuText->setTitle("Текст");
+        ui->analysisMethod->setText("Метод анализа");
+        ui->classificationGrammar->setText("Классификация грамматики");
+        ui->diagnosticsAnalysisError->setText("Диагностика и нейтрализация ошибок");
+        ui->grammar->setText("Грамматика");
+        ui->references->setText("Список литературы");
+        ui->sourceCodeProgramm->setText("Исходный код программы");
+        ui->statmentProblem->setText("Постановка задачи");
+        ui->testCase->setText("Тестовый пример");
+
+        ui->settings->setTitle("Настройки");
+        ui->customizeFont->setText("Настроить шрифт");
+        ui->changeLang->setText("Настроить язык");
+
+        ui->reference->setTitle("Справка");
+        ui->callReference->setText("Вызов справки");
+        ui->aboutReference->setText("О программе");
+
+        ui->command->setTitle("Пуск");
     }
+    else{
+        ui->menuFile->setTitle("File");
+        ui->create->setText("Create");
+        ui->open->setText("Open");
+        ui->save->setText("Save");
+        ui->saveAs->setText("Save as");
+        ui->exit->setText("Exit");
 
-    ui->create->setText(tr("Создать"));
-    ui->open->setText(tr("Открыть"));
+        ui->menuEditor->setTitle("Editing");
+        ui->ovveride->setText("Ovveride");
+        ui->replace->setText("Replace");
+        ui->cut->setText("Cut");
+        ui->copy->setText("Copy");
+        ui->insert->setText("Insert");
+        ui->remove->setText("Remove");
+        ui->select_all->setText("Select all");
+
+        ui->menuText->setTitle("Text");
+        ui->analysisMethod->setText("Analysis method");
+        ui->classificationGrammar->setText("Classification grammar");
+        ui->diagnosticsAnalysisError->setText("Diagnostics and analysis error");
+        ui->grammar->setText("Grammar");
+        ui->references->setText("References");
+        ui->sourceCodeProgramm->setText("Source code programm");
+        ui->statmentProblem->setText("Statment problem");
+        ui->testCase->setText("Test case");
+
+        ui->settings->setTitle("Settings");
+        ui->customizeFont->setText("Customize font");
+        ui->changeLang->setText("Change language");
+
+        ui->reference->setTitle("Reference");
+        ui->callReference->setText("Call reference");
+        ui->aboutReference->setText("About programm");
+
+        ui->command->setTitle("Command");
+    }
 }
