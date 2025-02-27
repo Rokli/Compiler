@@ -514,7 +514,7 @@ QMessageBox QLabel {
   </action>
   <action name="changeTheme">
    <property name="text">
-    <string>Смена темы</string>
+    <string>Сменить тему</string>
    </property>
   </action>
  </widget>

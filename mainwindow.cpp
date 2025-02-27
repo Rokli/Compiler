@@ -258,12 +258,15 @@ void MainWindow::changeLanguage(){
         ui->settings->setTitle("Настройки");
         ui->customizeFont->setText("Настроить шрифт");
         ui->changeLang->setText("Настроить язык");
+        ui->changeTheme->setText("Сменить тему");
 
         ui->reference->setTitle("Справка");
         ui->callReference->setText("Вызов справки");
         ui->aboutReference->setText("О программе");
 
         ui->command->setTitle("Пуск");
+        QStringList headers = {"Путь к файлу", "Линия", "Сообщение"};
+        ui->tableWidget->setHorizontalHeaderLabels(headers);
     }
     else{
         ui->menuFile->setTitle("File");
@@ -295,12 +298,16 @@ void MainWindow::changeLanguage(){
         ui->settings->setTitle("Settings");
         ui->customizeFont->setText("Customize font");
         ui->changeLang->setText("Change language");
+        ui->changeTheme->setText("Change theme");
 
         ui->reference->setTitle("Reference");
         ui->callReference->setText("Call reference");
         ui->aboutReference->setText("About programm");
 
         ui->command->setTitle("Command");
+
+        QStringList headers = {"File path", "Line", "Message"};
+        ui->tableWidget->setHorizontalHeaderLabels(headers);
     }
 }
 
