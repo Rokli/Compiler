@@ -18,6 +18,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
     current_id_ = 0;
 
+    ui->createDocumentButton->setToolTip("Создать документ");
+    ui->openDocumentButton->setToolTip("Открыть документ");
+    ui->insertButton->setToolTip("Вставить текст");
+    ui->copyButton->setToolTip("Скопировать текст");
+    ui->ovverideButton->setToolTip("Отменить последнее изменение");
+    ui->replaceButton->setToolTip("Повторить последнее изменение");
+    ui->saveDocumentButton->setToolTip("Сохранить документ");
+    ui->cutButton->setToolTip("Вырезать текст");
+
     connect(ui->create, &QAction::triggered, this, &MainWindow::createDocument);
     connect(ui->open, &QAction::triggered, this, &MainWindow::openDocument);
     connect(ui->save, &QAction::triggered, this, &MainWindow::saveDocument);
