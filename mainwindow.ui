@@ -303,17 +303,22 @@ QMessageBox QLabel {
       </property>
       <column>
        <property name="text">
-        <string>Путь к файлу</string>
+        <string>Число</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Линия</string>
+        <string>Идентификатор</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Сообщение</string>
+        <string>Знак</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Местоположение</string>
        </property>
       </column>
      </widget>

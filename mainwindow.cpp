@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->cutButton,&QPushButton::clicked,this,&MainWindow::cutEditing);
     connect(ui->insertButton,&QPushButton::clicked,this,&MainWindow::insertEditing);
 
+    connect(ui->command, &QMenu::aboutToShow, this, &MainWindow::command);
+
     connect(ui->changeLang,&QAction::triggered,this,&MainWindow::changeLanguage);
     connect(ui->changeTheme,&QAction::triggered,this,&MainWindow::changeTheme);
     connect(ui->customizeFont,&QAction::triggered,this,&MainWindow::customizeFont);
@@ -340,4 +342,9 @@ void MainWindow::changeTheme(){
         setStyleSheet(theme_->darkTheme_);
         theme_->theme_ = false;
     }
+}
+
+void MainWindow::command(){
+    LexicalScanner lexer(getCurrentIdTextEdit()->toPlainText());
+    lexer.analyzeToTable(ui->tableWidget);
 }

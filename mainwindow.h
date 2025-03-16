@@ -16,6 +16,7 @@
 #include "Models/codeeditor.h"
 #include "Models/lexerphp.h"
 #include "Models/styletheme.h"
+#include "Models/lexicalscanner.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -63,6 +64,8 @@ private slots:
     void changeLanguage();
     void changeTheme();
     void onTextChanged();
+
+    void command();
 
     void customizeFont();
     bool checkWork();
