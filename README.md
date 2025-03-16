@@ -10,7 +10,8 @@
 - define("bool",false)
 
 ### Диаграмма состояний сканера
-![Диаграмма без названия drawio](https://github.com/user-attachments/assets/17f9445c-fa51-4d67-8834-d9bf38ebc2bf)
+![Диаграмма б123ез названия drawio](https://github.com/user-attachments/assets/cea764b9-168c-4526-97de-2d92cf79b663)
+
 
 ### Тестовые примеры
 
