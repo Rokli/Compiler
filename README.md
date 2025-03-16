@@ -8,8 +8,9 @@
 - define("COLORS", ["red", "green", "blue"]);
 - define("bool",true)
 - define("bool",false)
-Этот компилятор предназначен для обработки и выполнения кода, написанного на PHP.
-![image](https://github.com/user-attachments/assets/48a618bc-6d68-41cd-ab1c-b4e7f9fc4557)
+
+### Диаграмма состояний сканера
+![Диаграмма без названия drawio](https://github.com/user-attachments/assets/17f9445c-fa51-4d67-8834-d9bf38ebc2bf)
 ###Тестовые примеры
 
 ![image](https://github.com/user-attachments/assets/084a8f50-ff32-4987-9380-e791bc08c643)
