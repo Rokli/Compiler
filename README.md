@@ -11,7 +11,8 @@
 
 ### Диаграмма состояний сканера
 ![Диаграмма без названия drawio](https://github.com/user-attachments/assets/17f9445c-fa51-4d67-8834-d9bf38ebc2bf)
-###Тестовые примеры
+
+### Тестовые примеры
 
 ![image](https://github.com/user-attachments/assets/084a8f50-ff32-4987-9380-e791bc08c643)
 ![image](https://github.com/user-attachments/assets/8184a099-e3c8-4436-bc28-37cad84e6851)
