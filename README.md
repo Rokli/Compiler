@@ -23,20 +23,29 @@
 ![image](https://github.com/user-attachments/assets/947af4a3-0fde-4770-824f-679d816fc8c3)
 ![image](https://github.com/user-attachments/assets/8565cb4e-4a5a-44a1-be9c-738450795309)
 
+## Грамматика
 
+<define-statement> ::= "define" "(" <constant-name> "," <constant-value> ")" ";"
 
+<constant-name> ::= <string-literal>
 
+<constant-value> ::= <scalar-value>
 
+<scalar-value> ::= <integer> | <float> | <string-literal> | <boolean>
 
+<string-literal> ::= '"' <char-sequence> '"' | "'" <char-sequence> "'"
 
+<char-sequence> ::= <char> | <char> <char-sequence>
 
+<char> ::= любой символ, кроме кавычек и управляющих символов
 
+<integer> ::= <digit> | <digit> <integer>
 
+<float> ::= <integer> "." <integer>
 
+<boolean> ::= "true" | "false"
 
-
-
-
+<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
 
 
