@@ -25,27 +25,27 @@
 
 ## Грамматика
 
-<define-statement> ::= "define" "(" <constant-name> "," <constant-value> ")" ";"
+< define-statement > ::= "define" "(" <constant-name> "," <constant-value> ")" ";"
 
-<constant-name> ::= <string-literal>
+< constant-name > ::= <string-literal>
 
-<constant-value> ::= <scalar-value>
+< constant-value > ::= <scalar-value>
 
-<scalar-value> ::= <integer> | <float> | <string-literal> | <boolean>
+< scalar-value > ::= <integer> | <float> | <string-literal> | <boolean>
 
-<string-literal> ::= '"' <char-sequence> '"' | "'" <char-sequence> "'"
+< string-literal > ::= '"' <char-sequence> '"' | "'" <char-sequence> "'"
 
-<char-sequence> ::= <char> | <char> <char-sequence>
+< char-sequence > ::= <char> | <char> <char-sequence>
 
-<char> ::= любой символ, кроме кавычек и управляющих символов
+< char > ::= любой символ, кроме кавычек и управляющих символов
 
-<integer> ::= <digit> | <digit> <integer>
+< integer > ::= <digit> | <digit> <integer>
 
-<float> ::= <integer> "." <integer>
+< float > ::= <integer> "." <integer>
 
-<boolean> ::= "true" | "false"
+< boolean > ::= "true" | "false"
 
-<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+< digit > ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
 
 
