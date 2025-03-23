@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 LexicalScanner::LexicalScanner(const QString &input)
-    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), expectingConstantName(false), inArray(false) {}
+    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), foundComma(false), foundValue(false), foundRParen(false), foundSemicolon(false) {}
 
 void LexicalScanner::advance() {
     position++;
@@ -13,7 +13,19 @@ Token LexicalScanner::createToken(TokenType type, const QString &value, int star
 }
 
 bool LexicalScanner::peekKeyword(const QString& keyword) {
-    return input.mid(position, keyword.length()) == keyword;
+    int len = keyword.length();
+
+    if (input.mid(position, len) == keyword) {
+        if (position + len < input.length()) {
+            QChar nextChar = input[position + len];
+            if (nextChar.isLetterOrNumber() || nextChar == '_') {
+                syntaxError = true;
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 Token LexicalScanner::readString(QChar quoteChar) {
@@ -31,13 +43,6 @@ Token LexicalScanner::readString(QChar quoteChar) {
     }
 
     advance();
-
-    if (expectingConstantName) {
-        foundName = true;
-        expectingConstantName = false;
-        return createToken(TOKEN_IDENTIFIER, str, start, position);
-    }
-
     return createToken(TOKEN_STRING, str, start, position);
 }
 
@@ -54,44 +59,7 @@ Token LexicalScanner::getNextToken() {
             int start = position;
             position += 6;
             foundDefine = true;
-            expectingConstantName = true;
             return createToken(TOKEN_DEFINE, "define", start, position);
-        }
-
-        if (currentChar == '(') {
-            advance();
-            return createToken(TOKEN_LPAREN, "(", position - 1, position);
-        }
-
-        if (currentChar == ')') {
-            advance();
-            return createToken(TOKEN_RPAREN, ")", position - 1, position);
-        }
-
-        if (currentChar == '[') {
-            inArray = true;
-            advance();
-            return createToken(TOKEN_ARRAY_START, "[", position - 1, position);
-        }
-
-        if (currentChar == ']') {
-            inArray = false;
-            advance();
-            return createToken(TOKEN_ARRAY_END, "]", position - 1, position);
-        }
-
-        if (currentChar == ',') {
-            advance();
-            return createToken(TOKEN_COMMA, ",", position - 1, position);
-        }
-
-        if (currentChar == ';') {
-            advance();
-            return createToken(TOKEN_SEMICOLON, ";", position - 1, position);
-        }
-
-        if (currentChar == '"' || currentChar == "'") {
-            return readString(currentChar);
         }
 
         if (currentChar.isLetter() || currentChar == '_') {
@@ -100,6 +68,10 @@ Token LexicalScanner::getNextToken() {
             while (position < input.length() && (input[position].isLetterOrNumber() || input[position] == '_')) {
                 identifier += input[position];
                 advance();
+            }
+            // Устанавливаем foundName только если найдено define
+            if (foundDefine) {
+                foundName = true;
             }
             return createToken(TOKEN_IDENTIFIER, identifier, start, position);
         }
@@ -115,7 +87,29 @@ Token LexicalScanner::getNextToken() {
                 number += input[position];
                 advance();
             }
+            foundValue = true;
             return createToken(isFloat ? TOKEN_FLOAT : TOKEN_INT, number, start, position);
+        }
+
+        if (currentChar == '(' || currentChar == ')' || currentChar == ',' || currentChar == ';') {
+            TokenType type;
+            switch (currentChar.unicode()) {
+            case '(': type = TOKEN_LPAREN; break;
+            case ')': foundRParen = true; type = TOKEN_RPAREN; break;
+            case ',': foundComma = true; type = TOKEN_COMMA; break;
+            case ';': foundSemicolon = true; type = TOKEN_SEMICOLON; break;
+            default: type = TOKEN_UNKNOWN; break;
+            }
+            advance();
+            return createToken(type, QString(currentChar), position - 1, position);
+        }
+
+        if (currentChar == '"' || currentChar == '\'') {
+            Token token = readString(currentChar);
+            if (foundDefine && token.type == TOKEN_STRING) {
+                foundName = true; // Устанавливаем флаг, если это строка и найдено define
+            }
+            return token;
         }
 
         advance();
@@ -126,48 +120,61 @@ Token LexicalScanner::getNextToken() {
 
 void LexicalScanner::analyzeToTable(QTableWidget* table) {
     table->setRowCount(0);
-    table->setColumnCount(5);
-    table->setHorizontalHeaderLabels({"Код состояния", "Значение", "Строка", "Начало", "Конец"});
+    table->setColumnCount(1);
+    table->setHorizontalHeaderLabels({"Ошибки"});
 
     Token token;
-    bool foundSemicolon = false;
+    int errorCount = 0;
 
     while ((token = getNextToken()).type != TOKEN_END) {
-        int row = table->rowCount();
-        table->insertRow(row);
-
-        table->setItem(row, 0, new QTableWidgetItem(QString::number(token.type)));
-        table->setItem(row, 1, new QTableWidgetItem(token.value));
-        table->setItem(row, 2, new QTableWidgetItem(QString::number(token.line)));
-        table->setItem(row, 3, new QTableWidgetItem(QString::number(token.start)));
-        table->setItem(row, 4, new QTableWidgetItem(QString::number(token.end)));
-
-        if (token.type == TOKEN_SEMICOLON) {
-            foundSemicolon = true;
+        if (token.type == TOKEN_UNKNOWN && token.value.contains("Ошибка")) {
+            int row = table->rowCount();
+            table->insertRow(row);
+            table->setItem(row, 0, new QTableWidgetItem(token.value));
+            errorCount++;
         }
     }
 
     if (!foundDefine) {
         table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 1, new QTableWidgetItem("Ошибка: отсутствие define"));
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует ключевое слово define"));
+        errorCount++;
     }
-
-    if (!foundName) {
+    if (foundDefine && !foundName) {
         table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 1, new QTableWidgetItem("Ошибка: отсутствие имени константы"));
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует имя константы"));
+        errorCount++;
     }
-
-    if (inArray) {
+    if (!foundComma) {
         table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 1, new QTableWidgetItem("Ошибка: незакрытый массив"));
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует запятая"));
+        errorCount++;
     }
-
+    if (!foundValue) {
+        table->insertRow(table->rowCount());
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует значение константы"));
+        errorCount++;
+    }
+    if (!foundRParen) {
+        table->insertRow(table->rowCount());
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует закрывающая скобка"));
+        errorCount++;
+    }
     if (!foundSemicolon) {
         table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 1, new QTableWidgetItem("Ошибка: отсутствует точка с запятой"));
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует завершающий оператор ;"));
+        errorCount++;
     }
+
+    table->insertRow(table->rowCount());
+    table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem(QString("Всего ошибок: %1").arg(errorCount)));
 }
 
 bool LexicalScanner::hasSyntaxError() const {
     return syntaxError;
+}
+
+bool LexicalScanner::isRussianLetter(QChar ch) {
+    return (ch >= QChar(u'а')) && (ch <= QChar(u'я')) ||
+           (ch >= QChar(u'А')) && (ch <= QChar(u'Я'));
 }

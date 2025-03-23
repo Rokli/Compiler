@@ -9,7 +9,7 @@ LexerPhp::LexerPhp(QObject *parent)
 
 void LexerPhp::highlightBlock(const QString &text)
 {
-    QRegularExpression keywordRegex("\\b(?:echo|if|else|while|for|function|class|return)\\b");
+    QRegularExpression keywordRegex("\\b(?:echo|if|else|while|for|function|return)\\b");
     QRegularExpressionMatchIterator keywordIterator = keywordRegex.globalMatch(text);
     while (keywordIterator.hasNext()) {
         QRegularExpressionMatch match = keywordIterator.next();
