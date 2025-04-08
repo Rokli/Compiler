@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 LexicalScanner::LexicalScanner(const QString &input)
-    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), foundComma(false), foundValue(false), foundRParen(false), foundSemicolon(false) {}
+    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), foundComma(false), foundValue(false), foundRParen(false), foundSemicolon(false), foundLParen(false) {}
 
 void LexicalScanner::advance() {
     position++;
@@ -62,6 +62,14 @@ Token LexicalScanner::getNextToken() {
             return createToken(TOKEN_DEFINE, "define", start, position);
         }
 
+        if (peekKeyword("true") || peekKeyword("false")) {
+            int start = position;
+            QString value = (input.mid(position, 4) == "true") ? "true" : "false";
+            position += value.length();
+            foundValue = true;
+            return createToken(TOKEN_BOOL, value, start, position);
+        }
+
         if (currentChar.isLetter() || currentChar == '_') {
             QString identifier;
             int start = position;
@@ -69,7 +77,6 @@ Token LexicalScanner::getNextToken() {
                 identifier += input[position];
                 advance();
             }
-            // Устанавливаем foundName только если найдено define
             if (foundDefine) {
                 foundName = true;
             }
@@ -94,7 +101,7 @@ Token LexicalScanner::getNextToken() {
         if (currentChar == '(' || currentChar == ')' || currentChar == ',' || currentChar == ';') {
             TokenType type;
             switch (currentChar.unicode()) {
-            case '(': type = TOKEN_LPAREN; break;
+            case '(': foundLParen = true; type = TOKEN_LPAREN; break;
             case ')': foundRParen = true; type = TOKEN_RPAREN; break;
             case ',': foundComma = true; type = TOKEN_COMMA; break;
             case ';': foundSemicolon = true; type = TOKEN_SEMICOLON; break;
@@ -107,7 +114,7 @@ Token LexicalScanner::getNextToken() {
         if (currentChar == '"' || currentChar == '\'') {
             Token token = readString(currentChar);
             if (foundDefine && token.type == TOKEN_STRING) {
-                foundName = true; // Устанавливаем флаг, если это строка и найдено define
+                foundName = true;
             }
             return token;
         }
@@ -145,36 +152,36 @@ void LexicalScanner::analyzeToTable(QTableWidget* table) {
         table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует имя константы"));
         errorCount++;
     }
-    if (!foundComma) {
+    if (!foundLParen) {
         table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует запятая"));
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует открывающая скобка"));
         errorCount++;
     }
-    if (!foundValue) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует значение константы"));
-        errorCount++;
-    }
+
     if (!foundRParen) {
         table->insertRow(table->rowCount());
         table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует закрывающая скобка"));
         errorCount++;
     }
+
     if (!foundSemicolon) {
         table->insertRow(table->rowCount());
         table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует завершающий оператор ;"));
         errorCount++;
     }
 
+    if (!foundValue) {
+        table->insertRow(table->rowCount());
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует значение константы"));
+        errorCount++;
+    }
+
+    if (!foundComma) {
+        table->insertRow(table->rowCount());
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует запятая"));
+        errorCount++;
+    }
+
     table->insertRow(table->rowCount());
     table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem(QString("Всего ошибок: %1").arg(errorCount)));
-}
-
-bool LexicalScanner::hasSyntaxError() const {
-    return syntaxError;
-}
-
-bool LexicalScanner::isRussianLetter(QChar ch) {
-    return (ch >= QChar(u'а')) && (ch <= QChar(u'я')) ||
-           (ch >= QChar(u'А')) && (ch <= QChar(u'Я'));
 }

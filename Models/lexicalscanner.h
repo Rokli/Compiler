@@ -13,6 +13,7 @@ enum TokenType {
     TOKEN_STRING,       // Строка
     TOKEN_INT,          // Целое число
     TOKEN_FLOAT,        // Число с плавающей точкой
+    TOKEN_BOOL,         // Булево значение (true/false)
     TOKEN_LPAREN,       // Открывающая скобка '('
     TOKEN_RPAREN,       // Закрывающая скобка ')'
     TOKEN_COMMA,        // Запятая ','
@@ -54,6 +55,7 @@ private:
     bool foundValue;
     bool foundRParen;
     bool foundSemicolon;
+    bool foundLParen = false;
 };
 
 #endif // LEXICALSCANNER_H
