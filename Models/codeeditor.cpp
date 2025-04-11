@@ -2,7 +2,6 @@
 #include "linenumberarea.h"
 #include <QPainter>
 #include <QTextBlock>
-#include <Qsci/qsciscintilla.h>
 
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) {
     lineNumberArea = new LineNumberArea(this);

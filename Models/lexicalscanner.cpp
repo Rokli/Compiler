@@ -80,6 +80,7 @@ Token LexicalScanner::getNextToken() {
             if (foundDefine) {
                 foundName = true;
             }
+
             return createToken(TOKEN_IDENTIFIER, identifier, start, position);
         }
 
@@ -111,14 +112,18 @@ Token LexicalScanner::getNextToken() {
             return createToken(type, QString(currentChar), position - 1, position);
         }
 
+
         if (currentChar == '"' || currentChar == '\'') {
             Token token = readString(currentChar);
-            if (foundDefine && token.type == TOKEN_STRING) {
+            if (token.type == TOKEN_STRING) {
                 foundName = true;
+                defineArgsCount += 1;
+            }
+            if(foundName){
+                foundValue = true;
             }
             return token;
         }
-
         advance();
         return createToken(TOKEN_UNKNOWN, QString("Ошибка: неизвестный символ '%1'").arg(currentChar), position - 1, position);
     }

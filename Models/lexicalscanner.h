@@ -36,6 +36,7 @@ public:
     Token getNextToken();
     void analyzeToTable(QTableWidget *table);
     bool hasSyntaxError() const;
+    bool peekDefineKeyword();
 
 private:
     void advance();
@@ -43,6 +44,7 @@ private:
     bool peekKeyword(const QString &keyword);
     Token readString(QChar quoteChar);
     bool isRussianLetter(QChar ch);
+    int defineArgsCount = 0;
 
     QString input;
     int position;
