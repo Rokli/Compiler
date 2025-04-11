@@ -17,6 +17,7 @@
 #include "Models/lexerphp.h"
 #include "Models/styletheme.h"
 #include "Models/lexicalscanner.h"
+#include <QDirIterator>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
