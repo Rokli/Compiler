@@ -165,7 +165,86 @@ void MainWindow::aboutReference(){
                              "О установке и управлении приложения можно почитать в документации.");
 }
 
-void MainWindow::openSettings(){
+void MainWindow::aboutStateMentProblem(){
+    QMessageBox::information(this,
+                             "Постановка задачи",
+                             "Выполнить программную реализацию объявления функции define на языке PHP.");
+}
+
+void MainWindow::aboutClassificationGrammar(){
+    QMessageBox::information(this,
+                            "Классификация грамматики",
+                            "Автоматные или регулярные грамматики имеют самые строгие ограничения на форму записи правил:\n"
+                            "A → aB | a | ε,"
+                            "где a∈VТ, A∈VN и B∈VB.");
+}
+
+void MainWindow::aboutDiagnosticsAnalysisError(){
+    QMessageBox::information(this,
+                            "Диагностика и нейтрализация ошибок\n",
+                            "Алгоритм нейтрализации состоит из следующих шагов:\n"
+                            "1. Определяются недостроенные кусты дерева разбора;\n"
+                            "2. Формируется множество L – множество остаточных символов недостроенных кустов дерева разбора;\n"
+                            "3. Из входной цепочки удаляется следующий символ до тех пор, пока цепочка не примет вид Tt, такой, что U => T, где U ∈ L, то есть до тех пор, пока следующий в цепочке символ T не сможет быть выведен из какогонибудь из остаточных символов недостроенных кустов.\n"
+                            "4. Определяется, какой из недостроенных кустов стал причиной появления символа U в множестве L (иначе говоря, частью какого из недостроенных кустов является символ U)");
+}
+
+void MainWindow::aboutGrammar(){
+    QMessageBox::information(this,
+                            "Грамматика",
+                            "1. <DEF> -> 'define' <LPAREN>\n"
+                            "2. <LPAREN> -> '(' <MARK>\n"
+                            "3. <MARK> -> '\"' <ID>\n"
+                            "4. <ID> -> letter <IDREM>\n"
+                            "5. <ID> -> digit <IDREM>\n"
+                            "6. <IDREM> -> letter <IDREM>\n"
+                            "7. <IDREM> -> digit <IDREM>\n"
+                            "8. <IDREM> -> '\"' <COMMA>\n"
+                            "9. <COMMA> -> ',' <VALUE>\n"
+                            "10.  <VALUE> -> digit <VALUEREM>\n"
+                            "11.  <VALUE> -> '\"' <STRING>\n"
+                            "12.  <VALUE> -> 'true' <RPAREN>\n"
+                            "13.  <VALUE> -> 'false' <RPAREN>\n"
+                            "14.  <VALUE> -> '+' <VALUETYPE>\n"
+                            "15.  <VALUE> -> '-' <VALUETYPE>\n"
+                            "16.  <VALUETYPE> -> digit <VALUEREM>\n"
+                            "17.  <VALUEREM> -> digit <VALUEREM>\n"
+                            "18.  <VALUEREM> -> ')' <SEMICOLON>\n"
+                            "19.  <VALUEREM> -> '.' <DECIMAL>\n"
+                            "20.  <DECIMAL> -> digit <DECIMALREM>\n"
+                            "21.  <DECIMALREM> -> digit <DECIMALREM>\n"
+                            "22.  <DECIMALREM> -> \")\" <SEMILICON>\n"
+                            "23.  <STRING> -> letter <STRINGREM>\n"
+                            "24.  <STRING> -> digit <STRINGREM>\n"
+                            "25.  <STRINGREM> -> letter <STRINGREM>\n"
+                            "26.  <STRINGREM> -> digit <STRINGREM>\n"
+                            "27.  <STRINGREM> -> '\"' <RPAREN>\n"
+                            "28.  <RPAREN> -> ')' <SEMICOLON>\n"
+                            "29.  <SEMICOLON> -> ';'\n"
+                            "<letter> → 'a' | 'b' | 'c' | ... | 'z' | 'A' | 'B' | 'C' | ... | 'Z' |\n"
+                            "<digit> → '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'\n"
+                            "Следуя введенному формальному определению грамматики, представим G[<DEF>] ее составляющими:\n"
+                            "• Z = G[<DEF >];\n"
+                            "• VT = {a, b, c, ..., z, A, B, C, ..., Z, +, -, ;, .,0, 1, 2, ..., 9};\n"
+                            "• VN = {<DEF>, <LPAREN>, <MARK>, <ID>, <IDREM>,   <COMMA>, <VALUE>, <VALUETYPE>, <VALUEREM>, <DECIMAL>, <DECIMALREM>, <STRING>, <STRINGREM>, <RPAREN>, <SEMICOLON>}\n");
+}
+void MainWindow::aboutReferences(){
+    QMessageBox::information(this,
+                            "Список литературы",
+                            "1. Теория формальных языков и компиляторов [Электронный ресурс]/ Электрон. дан. URL: https://dispace.edu.nstu.ru/didesk/course/show/8594, свободный. Яз.рус. (дата обращения 19.03.2025).\n"
+                            "2. Gries D. Designing Compilers for Digital Computers. New York, Jhon Wiley, 1971. 493 p.\n"
+                            "3. Основы PHP\Константы [Электронный ресурс]/ Электрон. дан.\n"
+                            "URL: https://metanit.com/php/tutorial/2.4.php, свободный. Яз.рус. (дата обращения 20.03.2025).\n"
+                            "4. Шорников Ю.В. Теория и практика языковых процессоров : учеб. пособие / Ю.В. Шорников. – Новосибирск: Изд-во НГТУ, 2004.");
+}
+
+void MainWindow::aboutSourceCodeProgramm(){
+    QMessageBox::information(this,
+                             "Исходный код программы",
+                             "https://github.com/Rokli/Compiler");
+}
+
+void MainWindow::aboutTestCase(){
 
 }
 

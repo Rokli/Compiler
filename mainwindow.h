@@ -70,6 +70,15 @@ private slots:
 
     void customizeFont();
     bool checkWork();
+
+    void aboutStateMentProblem();
+    void aboutClassificationGrammar();
+    void aboutDiagnosticsAnalysisError();
+    void aboutGrammar();
+    void aboutReferences();
+    void aboutSourceCodeProgramm();
+    void aboutTestCase();
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
