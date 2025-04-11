@@ -61,17 +61,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     QString appDir = QCoreApplication::applicationDirPath();
 
-    // QDirIterator it(":/icons", QDirIterator::Subdirectories);
-    // while (it.hasNext()) {
-    //     qWarning() << "Найден ресурс:" << it.next();
-    // }
+    QIcon icon(":/icons/copy.png");
+    if (icon.isNull()) {
+        qWarning() << "Иконка не загрузилась!";
+    }
+    ui->copyButton->setIcon(icon);
+    QDirIterator it(":/icons", QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        qWarning() << "Найден ресурс:" << it.next();
+    }
+    qWarning() << "Найден ресурс:";
     ui->copyButton->setIcon(QIcon(":/icons/icons/copy.png"));
     ui->createDocumentButton->setIcon(QIcon(":/icons/icons/create_document.png"));
-    ui->cutButton->setIcon(QIcon(":/icons/icons/cute.png"));
+    ui->cutButton->setIcon(QIcon(":/icons/icons/cut.png"));
     ui->insertButton->setIcon(QIcon(":/icons/icons/insert.png"));
     ui->openDocumentButton->setIcon(QIcon(":/icons/icons/open_document.png"));
     ui->ovverideButton->setIcon(QIcon(":/icons/icons/arrow-left.png"));
-    ui->replaceButton->setIcon(QIcon(":/icons/icons/arrow-rigth.png"));
+    ui->replaceButton->setIcon(QIcon(":/icons/icons/arrow-right.png"));
     ui->saveDocumentButton->setIcon(QIcon(":/icons/icons/save_document.png"));
 
 }

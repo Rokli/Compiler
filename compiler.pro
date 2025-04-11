@@ -1,9 +1,7 @@
 QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17 qscintilla2
-LIBS += -L/usr/lib64 -lqscintilla2_qt6
-INCLUDEPATH += /usr/include/qt6/Qsci
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -46,3 +44,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 TRANSLATIONS += \
     translate/compiler_en_GB.ts \
     translate/compiler_ru_RU.ts
+
+RESOURCES += \
+    resources.qrc
