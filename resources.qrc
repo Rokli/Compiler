@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/copy.png</file>
+        <file>icons/arrow-left.png</file>
+        <file>icons/arrow-rigth.png</file>
+        <file>icons/create_document.png</file>
+        <file>icons/cute.png</file>
+        <file>icons/insert.png</file>
+        <file>icons/open_document.png</file>
+        <file>icons/save_document.png</file>
+    </qresource>
+</RCC>
