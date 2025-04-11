@@ -59,6 +59,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->changeTheme,&QAction::triggered,this,&MainWindow::changeTheme);
     connect(ui->customizeFont,&QAction::triggered,this,&MainWindow::customizeFont);
 
+    connect(ui->statmentProblem,&QAction::triggered,this,&MainWindow::aboutStateMentProblem);
+    connect(ui->classificationGrammar,&QAction::triggered,this,&MainWindow::aboutClassificationGrammar);
+    connect(ui->diagnosticsAnalysisError,&QAction::triggered,this,&MainWindow::aboutDiagnosticsAnalysisError);
+    connect(ui->grammar,&QAction::triggered,this,&MainWindow::aboutGrammar);
+    connect(ui->references,&QAction::triggered,this,&MainWindow::aboutReferences);
+    connect(ui->sourceCodeProgramm,&QAction::triggered,this,&MainWindow::aboutSourceCodeProgramm);
+    connect(ui->testCase,&QAction::triggered,this,&MainWindow::aboutTestCase);
+
     QString appDir = QCoreApplication::applicationDirPath();
 
     QIcon icon(":/icons/copy.png");
@@ -245,7 +253,8 @@ void MainWindow::aboutSourceCodeProgramm(){
 }
 
 void MainWindow::aboutTestCase(){
-
+    if(!checkWork()) return;
+    getCurrentIdTextEdit()->setPlainText("define(\"VALUE\",30.3);");
 }
 
 void MainWindow::wheelEvent(QWheelEvent *event){
@@ -448,4 +457,8 @@ void MainWindow::changeTheme(){
 void MainWindow::command(){
     LexicalScanner lexer(getCurrentIdTextEdit()->toPlainText());
     lexer.analyzeToTable(ui->tableWidget);
+}
+
+void MainWindow::openSettings(){
+
 }
