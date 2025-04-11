@@ -44,6 +44,8 @@ private:
     bool peekKeyword(const QString &keyword);
     Token readString(QChar quoteChar);
     bool isRussianLetter(QChar ch);
+    bool semicolonAfterRParen;
+    bool commaInsideParens;
     int defineArgsCount = 0;
 
     QString input;

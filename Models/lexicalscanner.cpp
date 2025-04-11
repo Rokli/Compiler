@@ -2,7 +2,8 @@
 #include <stdexcept>
 
 LexicalScanner::LexicalScanner(const QString &input)
-    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), foundComma(false), foundValue(false), foundRParen(false), foundSemicolon(false), foundLParen(false) {}
+    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), foundComma(false),
+    foundValue(false), foundRParen(false), foundSemicolon(false), foundLParen(false), semicolonAfterRParen(true) {}
 
 void LexicalScanner::advance() {
     position++;
@@ -90,7 +91,9 @@ Token LexicalScanner::getNextToken() {
             bool isFloat = false;
             while (position < input.length() && (input[position].isDigit() || input[position] == '.')) {
                 if (input[position] == '.') {
-                    isFloat = true;
+                    if(!isFloat){
+                        isFloat = true;
+                    }else{ break;}
                 }
                 number += input[position];
                 advance();
@@ -101,15 +104,39 @@ Token LexicalScanner::getNextToken() {
 
         if (currentChar == '(' || currentChar == ')' || currentChar == ',' || currentChar == ';') {
             TokenType type;
+            bool error = false;
+            int start = position;
+
             switch (currentChar.unicode()) {
-            case '(': foundLParen = true; type = TOKEN_LPAREN; break;
-            case ')': foundRParen = true; type = TOKEN_RPAREN; break;
-            case ',': foundComma = true; type = TOKEN_COMMA; break;
-            case ';': foundSemicolon = true; type = TOKEN_SEMICOLON; break;
-            default: type = TOKEN_UNKNOWN; break;
+            case '(':
+                foundLParen = true;
+                type = TOKEN_LPAREN;
+                break;
+            case ')':
+                foundRParen = true;
+                type = TOKEN_RPAREN;
+                if (position + 1 < input.length() && input[position+1] != ';') {
+                    semicolonAfterRParen = false;
+                }
+                break;
+            case ',':
+                foundComma = true;
+                type = TOKEN_COMMA;
+                break;
+            case ';':
+                foundSemicolon = true;
+                type = TOKEN_SEMICOLON;
+                if (!foundRParen) {
+                    semicolonAfterRParen = false;
+                }
+                break;
+            default:
+                type = TOKEN_UNKNOWN;
+                break;
             }
+
             advance();
-            return createToken(type, QString(currentChar), position - 1, position);
+            return createToken(type, QString(currentChar), start, position);
         }
 
 
@@ -172,6 +199,12 @@ void LexicalScanner::analyzeToTable(QTableWidget* table) {
     if (!foundSemicolon) {
         table->insertRow(table->rowCount());
         table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует завершающий оператор ;"));
+        errorCount++;
+    }
+
+    if (!semicolonAfterRParen) {
+        table->insertRow(table->rowCount());
+        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: точка с запятой должна стоять после закрывающей скобки"));
         errorCount++;
     }
 
