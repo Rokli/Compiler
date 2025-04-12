@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->ovverideButton->setIcon(QIcon(":/icons/icons/arrow-left.png"));
     ui->replaceButton->setIcon(QIcon(":/icons/icons/arrow-right.png"));
     ui->saveDocumentButton->setIcon(QIcon(":/icons/icons/save_document.png"));
-
+    changeTheme();
 }
 
 MainWindow::~MainWindow()
