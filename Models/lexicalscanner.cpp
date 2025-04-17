@@ -1,225 +1,86 @@
 #include "lexicalscanner.h"
-#include <stdexcept>
+#include <QRegularExpression>
 
-LexicalScanner::LexicalScanner(const QString &input)
-    : input(input), position(0), lineNumber(1), syntaxError(false), foundDefine(false), foundName(false), foundComma(false),
-    foundValue(false), foundRParen(false), foundSemicolon(false), foundLParen(false), semicolonAfterRParen(true) {}
-
-void LexicalScanner::advance() {
-    position++;
-}
-
-Token LexicalScanner::createToken(TokenType type, const QString &value, int start, int end) {
-    return {type, value, lineNumber, start, end};
-}
-
-bool LexicalScanner::peekKeyword(const QString& keyword) {
-    int len = keyword.length();
-
-    if (input.mid(position, len) == keyword) {
-        if (position + len < input.length()) {
-            QChar nextChar = input[position + len];
-            if (nextChar.isLetterOrNumber() || nextChar == '_') {
-                syntaxError = true;
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-Token LexicalScanner::readString(QChar quoteChar) {
-    int start = position;
-    QString str;
-    advance();
-    while (position < input.length() && input[position] != quoteChar) {
-        str += input[position];
-        advance();
-    }
-
-    if (position >= input.length() || input[position] != quoteChar) {
-        syntaxError = true;
-        return createToken(TOKEN_UNKNOWN, "Ошибка: незакрытая строка", start, position);
-    }
-
-    advance();
-    return createToken(TOKEN_STRING, str, start, position);
-}
-
-Token LexicalScanner::getNextToken() {
-    while (position < input.length()) {
-        QChar currentChar = input[position];
-
-        if (currentChar.isSpace()) {
-            advance();
-            continue;
-        }
-
-        if (peekKeyword("define")) {
-            int start = position;
-            position += 6;
-            foundDefine = true;
-            return createToken(TOKEN_DEFINE, "define", start, position);
-        }
-
-        if (peekKeyword("true") || peekKeyword("false")) {
-            int start = position;
-            QString value = (input.mid(position, 4) == "true") ? "true" : "false";
-            position += value.length();
-            foundValue = true;
-            return createToken(TOKEN_BOOL, value, start, position);
-        }
-
-        if (currentChar.isLetter() || currentChar == '_') {
-            QString identifier;
-            int start = position;
-            while (position < input.length() && (input[position].isLetterOrNumber() || input[position] == '_')) {
-                identifier += input[position];
-                advance();
-            }
-            if (foundDefine) {
-                foundName = true;
-            }
-
-            return createToken(TOKEN_IDENTIFIER, identifier, start, position);
-        }
-
-        if (currentChar.isDigit()) {
-            QString number;
-            int start = position;
-            bool isFloat = false;
-            while (position < input.length() && (input[position].isDigit() || input[position] == '.')) {
-                if (input[position] == '.') {
-                    if(!isFloat){
-                        isFloat = true;
-                    }else{ break;}
-                }
-                number += input[position];
-                advance();
-            }
-            foundValue = true;
-            return createToken(isFloat ? TOKEN_FLOAT : TOKEN_INT, number, start, position);
-        }
-
-        if (currentChar == '(' || currentChar == ')' || currentChar == ',' || currentChar == ';') {
-            TokenType type;
-            bool error = false;
-            int start = position;
-
-            switch (currentChar.unicode()) {
-            case '(':
-                foundLParen = true;
-                type = TOKEN_LPAREN;
-                break;
-            case ')':
-                foundRParen = true;
-                type = TOKEN_RPAREN;
-                if (position + 1 < input.length() && input[position+1] != ';') {
-                    semicolonAfterRParen = false;
-                }
-                break;
-            case ',':
-                foundComma = true;
-                type = TOKEN_COMMA;
-                break;
-            case ';':
-                foundSemicolon = true;
-                type = TOKEN_SEMICOLON;
-                if (!foundRParen) {
-                    semicolonAfterRParen = false;
-                }
-                break;
-            default:
-                type = TOKEN_UNKNOWN;
-                break;
-            }
-
-            advance();
-            return createToken(type, QString(currentChar), start, position);
-        }
-
-
-        if (currentChar == '"' || currentChar == '\'') {
-            Token token = readString(currentChar);
-            if (token.type == TOKEN_STRING) {
-                foundName = true;
-                defineArgsCount += 1;
-            }
-            if(foundName){
-                foundValue = true;
-            }
-            return token;
-        }
-        advance();
-        return createToken(TOKEN_UNKNOWN, QString("Ошибка: неизвестный символ '%1'").arg(currentChar), position - 1, position);
-    }
-    return {TOKEN_END, "", lineNumber, position, position};
+LexicalScanner::LexicalScanner(const QString& input) : input(input) {
+    lines = input.split('\n');
 }
 
 void LexicalScanner::analyzeToTable(QTableWidget* table) {
-    table->setRowCount(0);
+    errors.clear();
+    for (int i = 0; i < lines.size(); ++i) {
+        parseLine(lines[i].trimmed(), i + 1);
+    }
+
+    table->setRowCount(errors.size() + 1);
     table->setColumnCount(1);
-    table->setHorizontalHeaderLabels({"Ошибки"});
+    table->setHorizontalHeaderLabels(QStringList() << "Ошибки");
 
-    Token token;
-    int errorCount = 0;
+    for (int i = 0; i < errors.size(); ++i) {
+        table->setItem(i, 0, new QTableWidgetItem(errors[i]));
+    }
 
-    while ((token = getNextToken()).type != TOKEN_END) {
-        if (token.type == TOKEN_UNKNOWN && token.value.contains("Ошибка")) {
-            int row = table->rowCount();
-            table->insertRow(row);
-            table->setItem(row, 0, new QTableWidgetItem(token.value));
-            errorCount++;
+    table->setItem(errors.size(), 0,
+                   new QTableWidgetItem(QString("Всего ошибок: %1").arg(errors.size())));
+}
+
+void LexicalScanner::parseLine(const QString& line, int lineNumber) {
+    if (line.isEmpty()) return;
+
+    bool hasDefine = line.contains(QRegularExpression(R"(\bdefine\b)"));
+    if (!hasDefine) {
+        addError(lineNumber, "Ошибка: отсутствует ключевое слово define");
+    }
+
+    bool hasOpeningParen = line.contains('(');
+    bool hasClosingParen = line.contains(')');
+    bool hasSemicolon = line.contains(';');
+    bool semicolonAfterParen = line.contains(");");
+    bool hasComma = line.contains(',');
+
+    if (!hasOpeningParen)
+        addError(lineNumber, "Ошибка: отсутствует открывающая скобка");
+
+    if (!hasClosingParen)
+        addError(lineNumber, "Ошибка: отсутствует закрывающая скобка");
+
+    if (!hasSemicolon)
+        addError(lineNumber, "Ошибка: отсутствует завершающий оператор ;");
+
+    if (hasClosingParen && hasSemicolon && !semicolonAfterParen)
+        addError(lineNumber, "Ошибка: точка с запятой должна стоять сразу после закрывающей скобки");
+
+    // Проверка имени константы
+    QRegularExpression nameRegex(R"(\s*\(\s*(['"])?([A-Za-z_][A-Za-z0-9_]*)\1?)");
+    if (!nameRegex.match(line).hasMatch())
+        addError(lineNumber, "Ошибка: отсутствует имя константы");
+
+    if (!hasComma)
+        addError(lineNumber, "Ошибка: отсутствует запятая");
+
+    // Попробуем достать значение
+    QRegularExpression valueRegex(R"(,\s*(.+?)\s*\))");
+    QRegularExpressionMatch valueMatch = valueRegex.match(line);
+    if (valueMatch.hasMatch()) {
+        QString value = valueMatch.captured(1).trimmed();
+
+        // Проверка на незакрытую строку
+        if ((value.startsWith("\"") && !value.endsWith("\"")) ||
+            (value.startsWith("'") && !value.endsWith("'"))) {
+            addError(lineNumber, "Ошибка: незакрытая строка");
         }
-    }
 
-    if (!foundDefine) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует ключевое слово define"));
-        errorCount++;
+        // Проверка допустимого значения
+        QRegularExpression validValueRegex(R"(^(true|false|null|[+-]?\d+(\.\d+)?|(['"]).*\3)$)", QRegularExpression::CaseInsensitiveOption);
+        if (!validValueRegex.match(value).hasMatch()) {
+            addError(lineNumber, "Ошибка: отсутствует значение константы или оно некорректно");
+        }
+    } else {
+        addError(lineNumber, "Ошибка: отсутствует значение константы");
     }
-    if (foundDefine && !foundName) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует имя константы"));
-        errorCount++;
-    }
-    if (!foundLParen) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует открывающая скобка"));
-        errorCount++;
-    }
+}
 
-    if (!foundRParen) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует закрывающая скобка"));
-        errorCount++;
-    }
 
-    if (!foundSemicolon) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует завершающий оператор ;"));
-        errorCount++;
-    }
 
-    if (!semicolonAfterRParen) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: точка с запятой должна стоять после закрывающей скобки"));
-        errorCount++;
-    }
-
-    if (!foundValue) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует значение константы"));
-        errorCount++;
-    }
-
-    if (!foundComma) {
-        table->insertRow(table->rowCount());
-        table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Ошибка: отсутствует запятая"));
-        errorCount++;
-    }
-
-    table->insertRow(table->rowCount());
-    table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem(QString("Всего ошибок: %1").arg(errorCount)));
+void LexicalScanner::addError(int lineNumber, const QString& message) {
+    errors.append(QString("Строка %1: %2").arg(lineNumber).arg(message));
 }
