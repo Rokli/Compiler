@@ -13,7 +13,7 @@ public:
 
 private:
     QString input;
-    QVector<QString> lines;
+    QStringList lines;
     QVector<QString> errors;
 
     void parseLine(const QString& line, int lineNumber);
