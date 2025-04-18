@@ -49,7 +49,6 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
     if (hasClosingParen && hasSemicolon && !semicolonAfterParen)
         addError(lineNumber, "Ошибка: точка с запятой должна стоять сразу после закрывающей скобки");
 
-    // Проверка имени константы
     QRegularExpression nameRegex(R"(\(\s*(['"]))");
     QRegularExpressionMatch nameMatch = nameRegex.match(line);
     if (nameMatch.hasMatch()) {
@@ -66,24 +65,20 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
     if (!hasComma)
         addError(lineNumber, "Ошибка: отсутствует запятая");
 
-    // Попробуем достать значение
     if (hasComma) {
         int commaPos = line.indexOf(',');
         QString valuePart = line.mid(commaPos + 1).trimmed();
 
-        // Удаляем возможную закрывающую скобку и точку с запятой в конце
         valuePart = valuePart.replace(QRegularExpression(R"([);].*$)"), "").trimmed();
 
         if (valuePart.isEmpty()) {
             addError(lineNumber, "Ошибка: отсутствует значение константы");
         } else {
-            // Проверка на незакрытую строку
             if ((valuePart.startsWith("\"") && !valuePart.endsWith("\"")) ||
                 (valuePart.startsWith("'") && !valuePart.endsWith("'"))) {
                 addError(lineNumber, "Ошибка: незакрытая строка в значении");
             }
 
-            // Проверка допустимого значения
             QRegularExpression validValueRegex(R"(^(true|false|null|[+-]?\d+(\.\d+)?|(['"]).*\3)$)",
                                                QRegularExpression::CaseInsensitiveOption);
             if (!validValueRegex.match(valuePart).hasMatch()) {

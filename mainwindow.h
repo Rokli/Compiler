@@ -18,6 +18,7 @@
 #include "Models/styletheme.h"
 #include "Models/lexicalscanner.h"
 #include <QDirIterator>
+#include <QStandardPaths>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -78,6 +79,8 @@ private slots:
     void aboutReferences();
     void aboutSourceCodeProgramm();
     void aboutTestCase();
+    void aboutAnalysisMethod();
+    void openEmbeddedWordFile(QString name);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;
