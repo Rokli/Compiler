@@ -65,7 +65,7 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
     if (!hasComma)
         addError(lineNumber, "Ошибка: отсутствует запятая");
 
-    if (hasComma) {
+    {
         int commaPos = line.indexOf(',');
         QString valuePart = line.mid(commaPos + 1).trimmed();
 
@@ -82,7 +82,7 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
             QRegularExpression validValueRegex(R"(^(true|false|null|[+-]?\d+(\.\d+)?|(['"]).*\3)$)",
                                                QRegularExpression::CaseInsensitiveOption);
             if (!validValueRegex.match(valuePart).hasMatch()) {
-                addError(lineNumber, "Ошибка: значение константы некорректно");
+                addError(lineNumber, "Ошибка: значение константы некорректно или отсуствует");
             }
         }
     }
