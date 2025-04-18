@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->replaceButton->setIcon(QIcon(":/icons/icons/arrow-right.png"));
     ui->saveDocumentButton->setIcon(QIcon(":/icons/icons/save_document.png"));
     changeTheme();
+    addNewTab();
 }
 
 MainWindow::~MainWindow()

@@ -50,9 +50,18 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
         addError(lineNumber, "Ошибка: точка с запятой должна стоять сразу после закрывающей скобки");
 
     // Проверка имени константы
-    QRegularExpression nameRegex(R"(\s*\(\s*(['"])?([A-Za-z_][A-Za-z0-9_]*)\1?)");
-    if (!nameRegex.match(line).hasMatch())
+    QRegularExpression nameRegex(R"(\(\s*(['"]))"); // ищем открывающую кавычку после (
+    QRegularExpressionMatch nameMatch = nameRegex.match(line);
+    if (nameMatch.hasMatch()) {
+        QString quote = nameMatch.captured(1);
+        int start = line.indexOf(quote);
+        int end = line.indexOf(quote, start + 1);
+        if (end == -1) {
+            addError(lineNumber, "Ошибка: незакрытая строка в имени константы");
+        }
+    } else {
         addError(lineNumber, "Ошибка: отсутствует имя константы");
+    }
 
     if (!hasComma)
         addError(lineNumber, "Ошибка: отсутствует запятая");
