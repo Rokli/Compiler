@@ -58,24 +58,26 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
         addError(lineNumber, "Ошибка: отсутствует запятая");
 
     // Попробуем достать значение
-    QRegularExpression valueRegex(R"(,\s*(.+?)\s*\))");
-    QRegularExpressionMatch valueMatch = valueRegex.match(line);
-    if (valueMatch.hasMatch()) {
-        QString value = valueMatch.captured(1).trimmed();
+    if (hasClosingParen) {
+        QRegularExpression valueRegex(R"(,\s*(.+?)\s*\))");
+        QRegularExpressionMatch valueMatch = valueRegex.match(line);
+        if (valueMatch.hasMatch()) {
+            QString value = valueMatch.captured(1).trimmed();
 
-        // Проверка на незакрытую строку
-        if ((value.startsWith("\"") && !value.endsWith("\"")) ||
-            (value.startsWith("'") && !value.endsWith("'"))) {
-            addError(lineNumber, "Ошибка: незакрытая строка");
-        }
+            // Проверка на незакрытую строку
+            if ((value.startsWith("\"") && !value.endsWith("\"")) ||
+                (value.startsWith("'") && !value.endsWith("'"))) {
+                addError(lineNumber, "Ошибка: незакрытая строка");
+            }
 
-        // Проверка допустимого значения
-        QRegularExpression validValueRegex(R"(^(true|false|null|[+-]?\d+(\.\d+)?|(['"]).*\3)$)", QRegularExpression::CaseInsensitiveOption);
-        if (!validValueRegex.match(value).hasMatch()) {
-            addError(lineNumber, "Ошибка: отсутствует значение константы или оно некорректно");
+            // Проверка допустимого значения
+            QRegularExpression validValueRegex(R"(^(true|false|null|[+-]?\d+(\.\d+)?|(['"]).*\3)$)", QRegularExpression::CaseInsensitiveOption);
+            if (!validValueRegex.match(value).hasMatch()) {
+                addError(lineNumber, "Ошибка: отсутствует значение константы или оно некорректно");
+            }
+        } else {
+            addError(lineNumber, "Ошибка: отсутствует значение константы");
         }
-    } else {
-        addError(lineNumber, "Ошибка: отсутствует значение константы");
     }
 }
 
