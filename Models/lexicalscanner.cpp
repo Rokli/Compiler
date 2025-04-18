@@ -103,5 +103,5 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
 
 
 void LexicalScanner::addError(int lineNumber, const QString& message) {
-    errors.append(QString("Строка %1: %2").arg(lineNumber).arg(message));
+    errors.append(QString("%2").arg(message));
 }
