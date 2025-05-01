@@ -455,8 +455,8 @@ void MainWindow::changeTheme(){
 }
 
 void MainWindow::command(){
-    LexicalScanner lexer(getCurrentIdTextEdit()->toPlainText());
-    lexer.analyzeToTable(ui->tableWidget);
+    ExpressionParser parser(getCurrentIdTextEdit()->toPlainText());
+    parser.analyze(ui->tableWidget);
 }
 
 void MainWindow::openSettings(){

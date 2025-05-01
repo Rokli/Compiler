@@ -11,6 +11,7 @@ SOURCES += \
     Models/codeeditor.cpp \
     Models/document.cpp \
     Models/editing.cpp \
+    Models/expressionparser.cpp \
     Models/lexerphp.cpp \
     Models/lexicalscanner.cpp \
     Models/linenumberarea.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     Models/codeeditor.h \
     Models/document.h \
     Models/editing.h \
+    Models/expressionparser.h \
     Models/lexerphp.h \
     Models/lexicalscanner.h \
     Models/linenumberarea.h \

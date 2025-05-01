@@ -13,11 +13,13 @@
 #include <QLocale>
 #include <QTranslator>
 #include <QCloseEvent>
+#include <QDirIterator>
 #include "Models/codeeditor.h"
 #include "Models/lexerphp.h"
 #include "Models/styletheme.h"
 #include "Models/lexicalscanner.h"
-#include <QDirIterator>
+#include "Models/expressionparser.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
