@@ -1,48 +1,80 @@
 #include "expressionparser.h"
 
 ExpressionParser::ExpressionParser(const QString& expression)
-    : expression(expression) {}
+    : m_expression(expression.trimmed()) {}
+
+void ExpressionParser::addError(const QString& message, int pos) {
+    if (pos < 0) pos = m_pos < m_tokens.size() ? m_pos : m_tokens.size() - 1;
+    m_errors.push_back({pos, message, getErrorContext(pos)});
+}
+
+QString ExpressionParser::getErrorContext(int pos) const {
+    if (pos < 0 || pos >= m_tokens.size()) return "конец выражения";
+
+    QString context;
+    int start = qMax(0, pos - 2);
+    int end = qMin(m_tokens.size() - 1, pos + 2);
+
+    for (int i = start; i <= end; ++i) {
+        if (i == pos) context += " >>" + m_tokens[i] + "<< ";
+        else context += m_tokens[i] + " ";
+    }
+
+    return context.trimmed();
+}
 
 void ExpressionParser::analyze(QTableWidget* table) {
     table->setRowCount(0);
-    tokens.clear();
-    poliz.clear();
-    errorMsg.clear();
-    pos = 0;
+    m_tokens.clear();
+    m_poliz.clear();
+    m_errors.clear();
+    m_pos = 0;
 
     tokenize();
-    if (!parseExpression()) {
-        errorMsg = "Ошибка синтаксиса";
-        analyzeToTable(table);
-        return;
+
+    if (m_tokens.isEmpty()) {
+        addError("Пустое выражение", 0);
+    } else {
+        if (!parseExpression()) {
+            if (m_errors.empty()) {
+                addError("Синтаксическая ошибка");
+            }
+        }
     }
 
-    if (pos < tokens.size()) {
-        errorMsg = "Ошибка: лишний токен \"" + tokens[pos] + "\"";
-        analyzeToTable(table);
-        return;
-    }
+    bool evalOk = false;
+    double result = 0;
 
-    bool ok = true;
-    double result = evalPoliz(ok);
-
-    if (!ok) {
-        if (errorMsg.isEmpty()) errorMsg = "Ошибка вычисления";
-        analyzeToTable(table);
-        return;
+    if (m_errors.empty()) {
+        result = evalPoliz(evalOk);
+        if (!evalOk && m_errors.empty()) {
+            addError("Ошибка вычисления");
+        }
     }
 
     analyzeToTable(table);
-    table->insertRow(table->rowCount());
-    table->setItem(table->rowCount() - 1, 0, new QTableWidgetItem("Результат: " + QString::number(result)));
+
+    if (!hasErrors()) {
+        table->insertRow(table->rowCount());
+        table->setItem(table->rowCount() - 1, 0,
+                       new QTableWidgetItem("Результат: " + QString::number(result)));
+    }
 }
 
 void ExpressionParser::tokenize() {
-    QRegularExpression regex(R"((\d+(?:\.\d+)?|[+\-*/()]))");
-    QRegularExpressionMatchIterator i = regex.globalMatch(expression);
+    QRegularExpression regex(R"((\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[+\-*/()]|\S))");
+    QRegularExpressionMatchIterator i = regex.globalMatch(m_expression);
+
     while (i.hasNext()) {
         QRegularExpressionMatch match = i.next();
-        tokens << match.captured(1);
+        QString token = match.captured(1);
+
+        if (token.length() == 1 && !token[0].isDigit() &&
+            !(token == "+" || token == "-" || token == "*" || token == "/" || token == "(" || token == ")")) {
+            addError("Недопустимый символ '" + token + "'", m_tokens.size());
+        }
+
+        m_tokens << token;
     }
 }
 
@@ -54,109 +86,143 @@ bool ExpressionParser::parseAddSub() {
     if (!parseMulDiv())
         return false;
 
-    while (pos < tokens.size()) {
-        QString op = tokens[pos];
+    while (m_pos < m_tokens.size()) {
+        QString op = m_tokens[m_pos];
         if (op != "+" && op != "-") break;
-        ++pos;
-        if (!parseMulDiv()) return false;
-        poliz.append(op);
+
+        ++m_pos;
+        if (!parseMulDiv() && m_pos >= m_tokens.size()) {
+            return false;
+        }
+        m_poliz.append(op);
     }
     return true;
 }
 
-bool ExpressionParser::parseMulDiv() {
-    if (!parseFactor()) return false;
 
-    while (pos < tokens.size()) {
-        QString op = tokens[pos];
+bool ExpressionParser::parseMulDiv() {
+    if (!parseFactor())
+        return false;
+
+    while (m_pos < m_tokens.size()) {
+        QString op = m_tokens[m_pos];
         if (op != "*" && op != "/") break;
-        ++pos;
-        if (!parseFactor()) return false;
-        poliz.append(op);
+
+        ++m_pos;
+        if (!parseFactor() && m_pos >= m_tokens.size()) {
+            addError("Отсутствует операнд после оператора '" + op + "'");
+            return false;
+        }
+        m_poliz.append(op);
     }
     return true;
 }
 
 bool ExpressionParser::parseFactor() {
-    if (pos >= tokens.size()) return false;
+    if (m_pos >= m_tokens.size()) {
+        return false;
+    }
 
-    QString token = tokens[pos];
+    QString token = m_tokens[m_pos];
 
     if (token == "(") {
-        ++pos;
-        if (!parseExpression()) return false;
-        if (pos >= tokens.size() || tokens[pos] != ")") return false;
-        ++pos;
+        int parenPos = m_pos;
+        ++m_pos;
+
+        if (!parseExpression()) {
+            addError("Некорректное подвыражение в скобках", parenPos);
+            return false;
+        }
+
+        if (m_pos >= m_tokens.size() || m_tokens[m_pos] != ")") {
+            addError("Незакрытая скобка", parenPos);
+            return false;
+        }
+
+        ++m_pos;
         return true;
     }
 
     bool ok;
     token.toDouble(&ok);
     if (ok) {
-        poliz.append(token);
-        ++pos;
+        m_poliz.append(token);
+        ++m_pos;
         return true;
     }
 
+    addError("Ожидалось число или скобка, получено '" + token + "'");
     return false;
 }
 
 double ExpressionParser::evalPoliz(bool& ok) {
     QStack<double> stack;
-    for (const QString& token : poliz) {
+    ok = true;
+
+    for (const QString& token : m_poliz) {
         if (token == "+" || token == "-" || token == "*" || token == "/") {
             if (stack.size() < 2) {
+                addError("Недостаточно операндов для оператора '" + token + "'");
                 ok = false;
-                errorMsg = "Ошибка: Отсутствие оператора";
                 return 0;
             }
+
             double b = stack.pop();
             double a = stack.pop();
+
             if (token == "+") stack.push(a + b);
             else if (token == "-") stack.push(a - b);
             else if (token == "*") stack.push(a * b);
             else if (token == "/") {
                 if (b == 0) {
+                    addError("Деление на ноль");
                     ok = false;
-                    errorMsg = "Ошибка: Деление на 0";
                     return 0;
                 }
                 stack.push(a / b);
             }
         } else {
-            bool conv = false;
-            double val = token.toDouble(&conv);
-            if (!conv) {
+            bool convOk;
+            double val = token.toDouble(&convOk);
+
+            if (!convOk) {
+                addError("Некорректный операнд '" + token + "'");
                 ok = false;
-                errorMsg = "Ошибка: Неверный операнд";
                 return 0;
             }
+
             stack.push(val);
         }
     }
 
-    if (stack.size() > 1) {
+    if (stack.size() != 1) {
+        addError("Неполное выражение");
         ok = false;
-        errorMsg = "Ошибка: Лишний операнд";
         return 0;
     }
 
-    ok = (stack.size() == 1);
     return stack.top();
 }
 
 void ExpressionParser::analyzeToTable(QTableWidget* table) {
     table->setRowCount(0);
-    table->setColumnCount(1);
 
-    if (!errorMsg.isEmpty()) {
+    if (hasErrors()) {
+        table->setColumnCount(1);  // Только одна колонка с ошибками
         table->setHorizontalHeaderLabels({"Ошибки"});
-        table->insertRow(0);
-        table->setItem(0, 0, new QTableWidgetItem(errorMsg));
+
+        for (const auto& error : m_errors) {
+            int row = table->rowCount();
+            table->insertRow(row);
+            table->setItem(row, 0, new QTableWidgetItem(error.message)); // Только текст ошибки
+        }
     } else {
-        table->setHorizontalHeaderLabels({"ПОЛИЗ"});
-        QString postfixString = poliz.join("");
+        table->setColumnCount(1);
+        table->setHorizontalHeaderLabels({"ОПН (Обратная Польская Нотация)"});
+
+        // Вывод всего ПОЛИЗа одной строкой
+        QString polizStr = m_poliz.join(" ");
         table->insertRow(0);
-        table->setItem(0, 0, new QTableWidgetItem(postfixString));
+        table->setItem(0, 0, new QTableWidgetItem(polizStr));
     }
 }
