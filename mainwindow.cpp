@@ -455,8 +455,15 @@ void MainWindow::changeTheme(){
 }
 
 void MainWindow::command(){
-    ExpressionParser parser(getCurrentIdTextEdit()->toPlainText());
-    parser.analyze(ui->tableWidget);
+    //5
+    // ExpressionParser parser(getCurrentIdTextEdit()->toPlainText());
+    // parser.analyze(ui->tableWidget);
+    //6
+    PatternMatcher matcher(getCurrentIdTextEdit()->toPlainText());
+
+    matcher.findUSZipCodes(ui->tableWidget);              // Для задачи 2
+    // matcher.findYearsInRange(ui->tableWidget);         // Для задачи 18
+    // matcher.findRealNumbersWithExponent(ui->tableWidget); // Для задачи 20
 }
 
 void MainWindow::openSettings(){

@@ -15,6 +15,7 @@ SOURCES += \
     Models/lexerphp.cpp \
     Models/lexicalscanner.cpp \
     Models/linenumberarea.cpp \
+    Models/patternmatcher.cpp \
     Models/programm.cpp \
     Models/styletheme.cpp \
     main.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     Models/lexerphp.h \
     Models/lexicalscanner.h \
     Models/linenumberarea.h \
+    Models/patternmatcher.h \
     Models/programm.h \
     Models/styletheme.h \
     mainwindow.h \

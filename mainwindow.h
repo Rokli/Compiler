@@ -19,6 +19,7 @@
 #include "Models/styletheme.h"
 #include "Models/lexicalscanner.h"
 #include "Models/expressionparser.h"
+#include "Models/patternmatcher.h"
 
 
 QT_BEGIN_NAMESPACE
