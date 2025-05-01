@@ -26,8 +26,7 @@ void LexicalScanner::analyzeToTable(QTableWidget* table) {
 void LexicalScanner::parseLine(const QString& line, int lineNumber) {
     if (line.isEmpty()) return;
 
-    // Более строгая проверка на ключевое слово define
-    QRegularExpression defineRegex(R"(^\s*define\s*\()");
+    QRegularExpression defineRegex(R"(define)");
     if (!defineRegex.match(line).hasMatch()) {
         addError(lineNumber, "Ошибка: отсутствует ключевое слово define");
     }
@@ -44,13 +43,15 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
     if (!hasClosingParen)
         addError(lineNumber, "Ошибка: отсутствует закрывающая скобка");
 
-    if (!hasSemicolon)
-        addError(lineNumber, "Ошибка: отсутствует завершающий оператор ;");
+    // QRegularExpression semicolonExactEnd(R"(\);\s*$)");
+    // if (!semicolonExactEnd.match(line).hasMatch()) {
+    //     addError(lineNumber, "Ошибка: точка с запятой должна стоять сразу после закрывающей скобки");
+    // }
 
-    if (hasClosingParen && hasSemicolon && !semicolonAfterParen)
-        addError(lineNumber, "Ошибка: точка с запятой должна стоять сразу после закрывающей скобки");
+    // if (hasClosingParen && hasSemicolon && !semicolonAfterParen)
+    //     addError(lineNumber, "Ошибка: точка с запятой должна стоять сразу после закрывающей скобки");
 
-    // Проверка имени константы
+
     QRegularExpression nameRegex(R"(\(\s*(['"]))");
     QRegularExpressionMatch nameMatch = nameRegex.match(line);
     if (nameMatch.hasMatch()) {
@@ -67,30 +68,26 @@ void LexicalScanner::parseLine(const QString& line, int lineNumber) {
             }
         }
     } else {
-        addError(lineNumber, "Ошибка: отсутствует имя константы");
+        addError(lineNumber, "Ошибка: отсутствует или неккоректно имя константы");
     }
 
     if (!hasComma)
         addError(lineNumber, "Ошибка: отсутствует запятая");
 
-    // Проверка значения константы
     {
         int commaPos = line.indexOf(',');
         QString valuePart = line.mid(commaPos + 1).trimmed();
 
-        // Удаляем возможную закрывающую скобку и точку с запятой в конце
         valuePart = valuePart.replace(QRegularExpression(R"([);].*$)"), "").trimmed();
 
         if (valuePart.isEmpty()) {
             addError(lineNumber, "Ошибка: отсутствует значение константы");
         } else {
-            // Проверка на незакрытую строку
             if ((valuePart.startsWith("\"") && !valuePart.endsWith("\"")) ||
                 (valuePart.startsWith("'") && !valuePart.endsWith("'"))) {
                 addError(lineNumber, "Ошибка: незакрытая строка в значении");
             }
 
-            // Проверка допустимого значения
             QRegularExpression validValueRegex(R"(^(true|false|null|[+-]?\d+(\.\d+)?|(['"]).*\3)$)",
                                                QRegularExpression::CaseInsensitiveOption);
             if (!validValueRegex.match(valuePart).hasMatch()) {
