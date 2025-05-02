@@ -44,11 +44,10 @@
 - define("bool",true)
 - define("bool",false)
 ### Тестовые примеры:
-![image](https://github.com/user-attachments/assets/2e3a86e7-536c-417b-bbfc-eee6ac6b11b0)
-![image](https://github.com/user-attachments/assets/ff313b68-9adf-4064-a1ef-c0057c29c831)
-![image](https://github.com/user-attachments/assets/db8eda82-ca0f-45bc-a998-68d52d55633f)
-![image](https://github.com/user-attachments/assets/706e36c5-ad51-40ce-9482-e4194e2c7f83)
-![image](https://github.com/user-attachments/assets/9e71d487-d90f-4ae8-bf04-40280e3a6c56)
+![image](https://github.com/user-attachments/assets/386b184a-1529-4a8f-aefe-eb2452d38b73)
+![image](https://github.com/user-attachments/assets/59aac5b4-9b0d-4f0a-9c19-b1a307996d6d)
+![image](https://github.com/user-attachments/assets/75738ec3-d628-4149-88c4-de28ef0a26fa)
+
 
 # Лабораторная работа №4. Нейтрализация ошибок (метод Айронса)
 ## Цель работы: Реализовать алгоритм нейтрализации синтаксических ошибок и дополнить им программную реализацию парсера.
