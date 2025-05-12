@@ -241,20 +241,11 @@ complier.exe
 ## Цель работы: Реализовать алгоритм поиска в тексте подстрок, соответствующих заданным регулярным выражениям.
 ## Задачи:
 ### 2) Построить РВ, описывающее американские почтовые индексы.
-void PatternMatcher::findUSZipCodes(QTableWidget* table) {
-    QRegularExpression regex(R"((?:^|\s)(\d{5}(?:-\d{4})?)(?=$|\s|[,\.]))");
-    parseAndFillTable(regex, table);
-}
+QRegularExpression regex(R"((\d{5}(?:-\d{4})?))");
 ### 18)
-void PatternMatcher::findYearsInRange(QTableWidget* table) {
-    QRegularExpression regex(R"((?:^|\s)(199[89]|200[0-4])(?=$|\s|[^\w]))");
-    parseAndFillTable(regex, table);
-}
+QRegularExpression regex(R"((199[89]|200[0-4]))");
 ### 20)
-void PatternMatcher::findRealNumbersWithExponent(QTableWidget* table) {
-    QRegularExpression regex(R"((?:^|\s)([+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?)(?=$|\s|[^\w\.]))");
-    parseAndFillTable(regex, table);
-}
+QRegularExpression regex(R"(([+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?))");
 
 ### Тестовые примеры:
 ![image](https://github.com/user-attachments/assets/64b126fd-db93-482f-b3f3-baf0f04d015e)
