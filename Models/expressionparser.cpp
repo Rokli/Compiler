@@ -50,25 +50,21 @@ void ExpressionParser::parseConditionalOperator() {
     addCall("Условный оператор");
     skipWhitespace();
 
-    // Проверяем IF
     if (!matchString("IF")) {
         addError("Ожидается IF в начале условного оператора");
         return;
     }
     skipWhitespace();
 
-    // Парсим условие
     parseCondition();
     skipWhitespace();
 
-    // Проверяем THEN
     if (!matchString("THEN")) {
         addError("Ожидается THEN после условия");
         return;
     }
     skipWhitespace();
 
-    // Парсим оператор
     parseOperator();
 }
 
@@ -215,13 +211,11 @@ void ExpressionParser::analyze(QTableWidget* table) {
         addError("Лишние символы в конце выражения");
     }
 
-    // Вывод результатов в таблицу
     if (errorCount == 0) {
         errorTable->insertRow(0);
         errorTable->setItem(0, 0, new QTableWidgetItem("1"));
         errorTable->setItem(0, 1, new QTableWidgetItem("Анализ завершен успешно"));
 
-        // Добавляем последовательность вызовов
         for (int i = 0; i < callSequence.size(); ++i) {
             errorTable->insertRow(i+1);
             errorTable->setItem(i+1, 0, new QTableWidgetItem(QString::number(i+2)));
