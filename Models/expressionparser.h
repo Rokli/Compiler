@@ -2,43 +2,36 @@
 #define EXPRESSIONPARSER_H
 
 #include <QString>
-#include <QStringList>
-#include <QStack>
 #include <QTableWidget>
-#include <QRegularExpression>
-#include <vector>
+#include <QChar>
 
 class ExpressionParser {
 public:
-    struct ParseError {
-        int position;
-        QString message;
-        QString context;
-    };
-
-    ExpressionParser(const QString& expression);
+    ExpressionParser(const QString& input);
     void analyze(QTableWidget* table);
 
-    const std::vector<ParseError>& errors() const { return m_errors; }
-    bool hasErrors() const { return !m_errors.empty(); }
-
 private:
-    QString m_expression;
-    QStringList m_tokens;
-    QStringList m_poliz;
-    std::vector<ParseError> m_errors;
-    int m_pos = 0;
+    QString input;
+    int pos;
+    QChar currentChar;
+    QTableWidget* errorTable;
+    int errorCount;
+    QStringList callSequence;
 
-    void tokenize();
-    bool parseExpression();
-    bool parseAddSub();
-    bool parseMulDiv();
-    bool parseFactor();
-    double evalPoliz(bool& ok);
-    void analyzeToTable(QTableWidget* table);
+    void nextChar();
+    void skipWhitespace();
+    void addError(const QString& message);
+    void addCall(const QString& functionName);
+    bool matchString(const QString& str);
 
-    void addError(const QString& message, int pos = -1);
-    QString getErrorContext(int pos) const;
+    void parseConditionalOperator();
+    void parseCondition();
+    void parseRelationalOperation();
+    void parseExpression();
+    void parseTerm();
+    void parseMultiplier();
+    void parseIdentifier();
+    void parseOperator();
 };
 
 #endif // EXPRESSIONPARSER_H
